@@ -25,6 +25,7 @@ repositories {
 }
 
 dependencies {
+    implementation("club.minnced:jda-ktx:0.11.0-beta.20")
     implementation("net.dv8tion:JDA:5.0.0-beta.24") {
         exclude(module="opus-java")
     }
