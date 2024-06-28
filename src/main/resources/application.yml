@@ -1,0 +1,16 @@
+spring:
+  main:
+    allow-circular-references: true
+  application:
+    name: oxidator
+  data:
+    mongodb:
+      uri: "mongodb://51.222.52.204:27017/"
+      database: "liftgate"
+  web:
+    resources:
+      add-mappings: false
+server:
+  error:
+    whitelabel:
+      enabled: false
