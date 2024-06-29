@@ -9,32 +9,42 @@ import io.liftgate.oxidator.product.platform.PaymentPlatformType
 import io.liftgate.oxidator.product.platform.builtbybit.BuiltByBitPaymentPlatform
 import io.liftgate.oxidator.product.platform.tebex.TebexPaymentPlatform
 import io.liftgate.oxidator.utilities.Colors
-import jakarta.annotation.PostConstruct
+import io.liftgate.oxidator.utilities.WARN_COLOUR
+import io.liftgate.oxidator.utilities.logger
 import net.dv8tion.jda.api.JDA
+import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 import kotlin.jvm.optionals.getOrNull
 
-@Service
-class ClaimCommand(
-    private val client: JDA,
-    private val tebexPaymentPlatform: TebexPaymentPlatform,
-    private val builtByBitPaymentPlatform: BuiltByBitPaymentPlatform,
-    private val productDetailsRepository: ProductDetailsRepository,
-    private val licenseRepository: LicenseRepository,
-)
+@Component
+class ClaimCommand : InitializingBean
 {
-    @PostConstruct
-    fun postConstruct()
+    @Autowired lateinit var client: JDA
+    @Autowired lateinit var tebexPaymentPlatform: TebexPaymentPlatform
+    @Autowired lateinit var builtByBitPaymentPlatform: BuiltByBitPaymentPlatform
+    @Autowired lateinit var productDetailsRepository: ProductDetailsRepository
+    @Autowired lateinit var licenseRepository: LicenseRepository
+
+    override fun afterPropertiesSet()
     {
+        logger.info { "${WARN_COLOUR}Subscribing to CLAIM" }
         client.onCommand("claim") { event ->
-            val product = event.getOption("product")?.name
-                ?: return@onCommand
+            val product = event.getOption("product")?.asString?.toLongOrNull()
+                ?: return@onCommand run {
+                    logger.info { "Product ${event.getOption("product")?.asString} does not exist" }
+                }
 
-            val detail = productDetailsRepository.findByNameIgnoreCase(product)
-                ?: return@onCommand
+            val detail = productDetailsRepository.findById(product).getOrNull()
+                ?: return@onCommand run {
+                    logger.info { "Product DETAIL $product does not exist" }
+                }
 
-            val transactionID = event.getOption("transaction-id")?.asString!!
+            val transactionID = event.getOption("transaction-id")?.asString
+                ?: return@onCommand run {
+                    logger.info { "TxnID ${event.getOption("transaction-id")?.asString} does not exist" }
+                }
+
             if (licenseRepository.findByAssociatedTxnIDIgnoreCase(transactionID) != null)
             {
                 event
@@ -124,4 +134,5 @@ class ClaimCommand(
             }
         }
     }
+
 }

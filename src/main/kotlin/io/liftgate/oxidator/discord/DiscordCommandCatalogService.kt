@@ -1,20 +1,17 @@
 package io.liftgate.oxidator.discord
 
-import dev.minn.jda.ktx.interactions.commands.*
+import dev.minn.jda.ktx.interactions.commands.option
+import dev.minn.jda.ktx.interactions.commands.slash
+import dev.minn.jda.ktx.interactions.commands.subcommand
+import dev.minn.jda.ktx.interactions.commands.updateCommands
 import io.liftgate.oxidator.product.details.ProductDetailsRepository
-import jakarta.annotation.PostConstruct
 import net.dv8tion.jda.api.JDA
+import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Service
 
 @Service
-class DiscordCommandCatalogService(private val discord: JDA, private val productDetailsRepository: ProductDetailsRepository)
+class DiscordCommandCatalogService(private val discord: JDA, private val productDetailsRepository: ProductDetailsRepository) : InitializingBean
 {
-    @PostConstruct
-    fun postConstruct()
-    {
-        updateCommands()
-    }
-
     fun updateCommands()
     {
         discord.updateCommands {
@@ -22,12 +19,12 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
                 name = "claim",
                 description = "Claim a license from your Tebex or BuiltByBit transaction ID."
             ) {
-                option<String>(name = "product", description = "The product in question.") {
+                option<String>(name = "product", description = "The product in question.", required = true) {
                     productDetailsRepository.findAll().forEach {
                         addChoice(it.name, it.productId.toString())
                     }
                 }
-                option<String>(name = "transaction-id", description = "The transaction ID.")
+                option<String>(name = "transaction-id", description = "The transaction ID.", required = true)
             }
 
             slash(
@@ -48,5 +45,10 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
                 ) {}
             }
         }.queue()
+    }
+
+    override fun afterPropertiesSet()
+    {
+        updateCommands()
     }
 }

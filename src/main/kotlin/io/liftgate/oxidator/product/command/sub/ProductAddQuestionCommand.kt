@@ -4,14 +4,14 @@ import dev.minn.jda.ktx.interactions.components.ModalBuilder
 import io.liftgate.oxidator.command.Subcommand
 import io.liftgate.oxidator.utilities.string
 import io.liftgate.oxidator.utilities.subscribeToModal
-import jakarta.annotation.PostConstruct
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent
+import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class ProductAddQuestionCommand : Subcommand
+class ProductAddQuestionCommand : Subcommand, InitializingBean
 {
     @Autowired lateinit var jda: JDA
 
@@ -40,7 +40,7 @@ class ProductAddQuestionCommand : Subcommand
             )
             this.paragraph(
                 id = "options",
-                label = "Add the options you want the user to be able to choose from (Only if the question is not free response). Separate all options by a comma",
+                label = "Add the options you want the user to be able to choose from .",
                 required = false
             )
         }.build()
@@ -48,8 +48,7 @@ class ProductAddQuestionCommand : Subcommand
         event.replyModal(modal)
     }
 
-    @PostConstruct
-    fun postConstruction()
+    override fun afterPropertiesSet()
     {
         jda.subscribeToModal("add-question") {
             val questionId = this.string("question-id")

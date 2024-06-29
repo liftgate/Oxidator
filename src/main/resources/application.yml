@@ -1,6 +1,5 @@
+
 spring:
-  main:
-    allow-circular-references: true
   application:
     name: oxidator
   data:
@@ -22,3 +21,10 @@ oxidator:
   tebex:
     category: "Software"
     apikey: "CHANGE ME"
+logging:
+  level:
+    root: info
+management:
+  health:
+    mongo:
+      enabled: false

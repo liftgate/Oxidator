@@ -17,7 +17,13 @@ class TebexPaymentPlatform : PaymentPlatform
 
     override val type = PaymentPlatformType.Tebex
 
-    override fun validate(product: ProductDetails, transactionId: String) = kotlin
-        .runCatching { tebexService.transaction(transactionId) }
-        .getOrNull() != null
+    override fun validate(product: ProductDetails, transactionId: String): Boolean
+    {
+        val tebexTxn = kotlin
+            .runCatching { tebexService.transaction(transactionId).execute().body() }
+            .getOrNull()
+            ?: return false
+
+        return tebexTxn.packages.any { it.id == product.tebexProductId.toInt() }
+    }
 }
