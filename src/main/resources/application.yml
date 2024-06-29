@@ -15,6 +15,8 @@ server:
     whitelabel:
       enabled: false
 oxidator:
+  builtbybit:
+    secret: "CHANGE ME"
   discord:
     token: "CHANGE ME"
   tebex:

@@ -6,6 +6,7 @@ import io.liftgate.oxidator.product.details.ProductDetailsRepository
 import io.liftgate.oxidator.product.license.License
 import io.liftgate.oxidator.product.license.LicenseRepository
 import io.liftgate.oxidator.product.platform.PaymentPlatformType
+import io.liftgate.oxidator.product.platform.builtbybit.BuiltByBitPaymentPlatform
 import io.liftgate.oxidator.product.platform.tebex.TebexPaymentPlatform
 import io.liftgate.oxidator.utilities.Colors
 import jakarta.annotation.PostConstruct
@@ -18,6 +19,7 @@ import kotlin.jvm.optionals.getOrNull
 class ClaimCommand(
     private val client: JDA,
     private val tebexPaymentPlatform: TebexPaymentPlatform,
+    private val builtByBitPaymentPlatform: BuiltByBitPaymentPlatform,
     private val productDetailsRepository: ProductDetailsRepository,
     private val licenseRepository: LicenseRepository,
 )
@@ -81,6 +83,41 @@ class ClaimCommand(
                             title = "Invalid Tebex Transaction ID"
                             description =
                                 "Your Tebex transaction ID is invalid. Please contact support staff if you feel this is a mistake."
+                        })
+                        .setEphemeral(true)
+                        .queue()
+                }
+            } else
+            {
+                if (builtByBitPaymentPlatform.validate(detail, transactionID))
+                {
+                    val license = licenseRepository.save(License(
+                        discordUser = event.user.idLong,
+                        platform = PaymentPlatformType.BuiltByBit,
+                        associatedTxnID = transactionID
+                    ))
+
+                    event.hook
+                        .sendMessageEmbeds(Embed {
+                            color = Colors.Success
+                            title = "License Key Created"
+                            description = """
+                                Congrats! You have claimed a new license key for your ${detail.name} purchase!
+                                `${license.licenseKey}`
+                                
+                                *(do not share your license key with anyone!)*
+                            """.trimIndent()
+                        })
+                        .setEphemeral(true)
+                        .queue()
+                } else
+                {
+                    event.hook
+                        .sendMessageEmbeds(Embed {
+                            color = Colors.Failure
+                            title = "Invalid BuiltByBit Transaction ID"
+                            description =
+                                "Your BuiltByBit transaction ID is invalid. Please contact support staff if you feel this is a mistake."
                         })
                         .setEphemeral(true)
                         .queue()
