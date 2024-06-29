@@ -46,7 +46,7 @@ class ProductService(
                 val product = productDetailsRepository.findByTebexProductId(it.id.toString())
                 if (product != null)
                 {
-                    logger.info { "  | ${it.name} already exists as a ProductDetail!" }
+                    logger.info { "  | ${it.name} already exists as a ProductDetail! (${product.name})" }
                     return@forEach
                 }
 

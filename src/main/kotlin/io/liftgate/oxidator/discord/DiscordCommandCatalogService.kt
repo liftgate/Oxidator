@@ -35,6 +35,11 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
             }
 
             slash(
+                name = "products",
+                description = "View all Liftgate products!"
+            )
+
+            slash(
                 name = "license",
                 description = "View all information related to licenses!"
             ) {
