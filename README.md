@@ -1,2 +1,2 @@
 # Oxidator
-oxi.liftgate.io
+oxy.liftgate.io
