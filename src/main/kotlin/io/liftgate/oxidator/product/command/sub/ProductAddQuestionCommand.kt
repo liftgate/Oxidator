@@ -40,12 +40,12 @@ class ProductAddQuestionCommand : Subcommand
             )
             this.paragraph(
                 id = "options",
-                label = "Add the options you want the user to be able to choose from (Only if the question is not free response). Separate all options by a comma",
+                label = "Add options for the question",
                 required = false
             )
         }.build()
 
-        event.replyModal(modal)
+        event.replyModal(modal).queue()
     }
 
     @PostConstruct
