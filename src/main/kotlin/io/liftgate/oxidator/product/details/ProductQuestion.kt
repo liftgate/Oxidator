@@ -1,6 +1,6 @@
 package io.liftgate.oxidator.product.details
 
-data class TebexProductQuestion(
+data class ProductQuestion(
     val id: String,
     val prompt: String,
     val freeResponse: Boolean,

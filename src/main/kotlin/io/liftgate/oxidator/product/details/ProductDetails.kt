@@ -4,11 +4,12 @@ import io.liftgate.oxidator.utilities.snowflake
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 
-@Document(collection = "tebex-product-details")
-class TebexProductDetails(
+@Document(collection = "product-details")
+class ProductDetails(
     @Id val productId: Long = snowflake(),
     val name: String,
     val description: String,
-    val tebexProductId: Long,
-    val questions: MutableList<TebexProductQuestion> = mutableListOf(),
+    val tebexProductId: String,
+    val bbbProductId: String,
+    val questions: MutableList<ProductQuestion> = mutableListOf(),
 )

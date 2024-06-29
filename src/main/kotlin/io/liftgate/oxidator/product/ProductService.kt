@@ -14,7 +14,6 @@ import retrofit2.Retrofit
 @Service
 class ProductService
 {
-    @Value("\${oxidator.tebex.apikey}") lateinit var tebexApiKey: String
     @Autowired lateinit var retrofit: Retrofit
 
     @PostConstruct

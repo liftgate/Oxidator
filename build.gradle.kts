@@ -23,6 +23,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven(url = "https://jitpack.io")
 }
 
 dependencies {
@@ -32,6 +33,7 @@ dependencies {
     }
 
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
+    implementation("com.github.LeeGodSRC:builtbybit-kotlin-api-wrapper:1.0.3")
 
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
