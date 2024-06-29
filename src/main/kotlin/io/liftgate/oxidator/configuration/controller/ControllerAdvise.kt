@@ -1,7 +1,5 @@
 package io.liftgate.catalyst.website.configuration.controller
 
-import io.github.resilience4j.ratelimiter.RequestNotPermitted
-import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -28,12 +26,5 @@ class ControllerAdvise
     fun internalError(exception: Exception, request: WebRequest) = mutableMapOf(
         "status" to "internal error",
         "message" to exception.localizedMessage
-    )
-
-    @ExceptionHandler(RequestNotPermitted::class)
-    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
-    fun requestNotPermitted(exception: RequestNotPermitted, request: HttpServletRequest) = mutableMapOf(
-        "status" to "too many requests",
-        "message" to ""
     )
 }
