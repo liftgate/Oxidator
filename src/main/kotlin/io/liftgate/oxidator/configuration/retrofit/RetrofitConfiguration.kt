@@ -23,10 +23,10 @@ class RetrofitConfiguration
     }
 
     @Bean
-    fun tebexService() = retrofit().create(TebexService::class.java)
+    fun tebexService() = tebexRetrofit().create(TebexService::class.java)
 
     @Bean
-    fun retrofit(): Retrofit
+    fun tebexRetrofit(): Retrofit
     {
         val httpClient = OkHttpClient.Builder()
         httpClient.addInterceptor { chain ->
