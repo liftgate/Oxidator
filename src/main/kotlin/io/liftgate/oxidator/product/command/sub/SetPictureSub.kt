@@ -35,7 +35,7 @@ class SetPictureSub : Subcommand
             title = "Set Picture"
             image = detail.picture
             description =
-                "The new picture for ${detail.picture} has been set."
+                "The new picture for ${detail.name} has been set."
         }).queue()
     }
 }

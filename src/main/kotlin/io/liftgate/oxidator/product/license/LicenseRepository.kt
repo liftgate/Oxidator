@@ -8,5 +8,6 @@ import org.springframework.data.mongodb.repository.MongoRepository
  */
 interface LicenseRepository : MongoRepository<License, Long>
 {
+    fun findAllByDiscordUser(user: Long): List<License>
     fun findByAssociatedTxnIDIgnoreCase(txnID: String): License?
 }

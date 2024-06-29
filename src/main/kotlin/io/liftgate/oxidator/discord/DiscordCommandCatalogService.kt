@@ -22,16 +22,26 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
         discord.updateCommands {
             slash(
                 name = "claim",
-                description = "Claim a license from your Tebex or BuiltByBit transaction ID."
+                description = "Claim a license using a Tebex or BuiltByBit transaction ID."
             ) {
                 isGuildOnly = true
 
                 option<String>("product", "The product in question.", required = true) {
                     products.forEach {
-                        addChoice(it.name, it.productId.toString())
+                        addChoice(it.name, it.id.toString())
                     }
                 }
                 option<String>(name = "transaction-id", description = "The transaction ID.", required = true)
+            }
+
+            slash(
+                name = "license",
+                description = "View all information related to licenses!"
+            ) {
+                subcommand(
+                    name = "view",
+                    description = "View all of your licenses."
+                )
             }
 
             slash(
@@ -47,7 +57,7 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
                 ) {
                     option<String>("product", "The product in question.", required = true) {
                         products.forEach {
-                            addChoice(it.name, it.productId.toString())
+                            addChoice(it.name, it.id.toString())
                         }
                     }
                     option<Role>("role", "The role to be assigned.", required = true)
@@ -59,7 +69,7 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
                 ) {
                     option<String>("product", "The product in question.", required = true) {
                         products.forEach {
-                            addChoice(it.name, it.productId.toString())
+                            addChoice(it.name, it.id.toString())
                         }
                     }
                     option<Int>("resource-id", "The resource ID to be assigned.", required = true)
@@ -71,7 +81,7 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
                 ) {
                     option<String>("product", "The product in question.", required = true) {
                         products.forEach {
-                            addChoice(it.name, it.productId.toString())
+                            addChoice(it.name, it.id.toString())
                         }
                     }
                     option<String>("name", "The name to be set.", required = true)
@@ -83,7 +93,7 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
                 ) {
                     option<String>("product", "The product in question.", required = true) {
                         products.forEach {
-                            addChoice(it.name, it.productId.toString())
+                            addChoice(it.name, it.id.toString())
                         }
                     }
                     option<String>("name", "The description to be set.", required = true)
@@ -95,7 +105,7 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
                 ) {
                     option<String>("product", "The product in question.", required = true) {
                         products.forEach {
-                            addChoice(it.name, it.productId.toString())
+                            addChoice(it.name, it.id.toString())
                         }
                     }
                     option<String>("url", "The picture URL to be set.", required = true)
@@ -107,7 +117,7 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
                 ) {
                     option<String>("product", "The product in question.", required = true) {
                         products.forEach {
-                            addChoice(it.name, it.productId.toString())
+                            addChoice(it.name, it.id.toString())
                         }
                     }
                 }

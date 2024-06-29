@@ -10,8 +10,6 @@ import io.liftgate.oxidator.product.platform.PaymentPlatformType
 import io.liftgate.oxidator.product.platform.builtbybit.BuiltByBitPaymentPlatform
 import io.liftgate.oxidator.product.platform.tebex.TebexPaymentPlatform
 import io.liftgate.oxidator.utilities.Colors
-import io.liftgate.oxidator.utilities.WARN_COLOUR
-import io.liftgate.oxidator.utilities.logger
 import net.dv8tion.jda.api.JDA
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
@@ -62,6 +60,7 @@ class ClaimCommand : InitializingBean
                     val license = licenseRepository.save(License(
                         discordUser = event.user.idLong,
                         platform = platformType,
+                        associatedProduct = detail.id,
                         associatedTxnID = transactionID
                     ))
 

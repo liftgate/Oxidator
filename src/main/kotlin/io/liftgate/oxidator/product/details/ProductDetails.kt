@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 
 @Document(collection = "product-details")
 class ProductDetails(
-    @Id val productId: Long = snowflake(),
+    @Id val id: Long = snowflake(),
     var name: String,
     val price: Double,
     var description: String,

@@ -18,6 +18,7 @@ val random = SecureRandom()
 data class License(
     @Id val id: Long = snowflake(),
     @Indexed val discordUser: Long,
+    @Indexed val associatedProduct: Long,
     val buddies: MutableList<Long> = mutableListOf(),
     val platform: PaymentPlatformType,
     val licenseKey: String = RandomStringUtils.random(
