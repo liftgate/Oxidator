@@ -1,4 +1,4 @@
-package io.liftgate.catalyst.website.configuration.controller
+package io.liftgate.oxidator.configuration.controller
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
