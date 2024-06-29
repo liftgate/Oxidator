@@ -22,7 +22,10 @@ data class License(
     val buddies: MutableList<Long> = mutableListOf(),
     val platform: PaymentPlatformType,
     val licenseKey: String = RandomStringUtils.random(
-        20, 0, 0, true, true, null, random
+        40, 0, 0,
+        true, true,
+        null,
+        random
     ),
     @Indexed val associatedTxnID: String
 )
