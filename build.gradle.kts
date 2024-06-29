@@ -32,6 +32,7 @@ dependencies {
         exclude(module="opus-java")
     }
 
+    implementation("org.apache.commons:commons-lang3:3.14.0")
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
     implementation("com.github.LeeGodSRC:builtbybit-kotlin-api-wrapper:1.0.3")
 
