@@ -19,6 +19,7 @@ class RetrofitConfiguration
     @Bean
     fun json() = Json {
         ignoreUnknownKeys = true
+        coerceInputValues = true
     }
 
     @Bean

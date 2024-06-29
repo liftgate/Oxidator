@@ -28,10 +28,10 @@ class BuiltByBitPaymentPlatform(private val client: BBBClient) : PaymentPlatform
             return@runBlocking false
         }
 
-        val purchase = runCatching {
+        runCatching {
             client.retrieveResourcePurchase(product.bbbProductId!!.toInt(), transactionId.toInt())
-        }.getOrNull()
-            ?: return@runBlocking false
+        }.getOrNull() ?: return@runBlocking false
+
         // TODO: check status
         return@runBlocking true
     }

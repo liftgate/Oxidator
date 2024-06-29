@@ -28,22 +28,15 @@ class ClaimCommand : InitializingBean
 
     override fun afterPropertiesSet()
     {
-        logger.info { "${WARN_COLOUR}Subscribing to CLAIM" }
         client.onCommand("claim") { event ->
             val product = event.getOption("product")?.asString?.toLongOrNull()
-                ?: return@onCommand run {
-                    logger.info { "Product ${event.getOption("product")?.asString} does not exist" }
-                }
+                ?: return@onCommand
 
             val detail = productDetailsRepository.findById(product).getOrNull()
-                ?: return@onCommand run {
-                    logger.info { "Product DETAIL $product does not exist" }
-                }
+                ?: return@onCommand
 
             val transactionID = event.getOption("transaction-id")?.asString
-                ?: return@onCommand run {
-                    logger.info { "TxnID ${event.getOption("transaction-id")?.asString} does not exist" }
-                }
+                ?: return@onCommand
 
             if (licenseRepository.findByAssociatedTxnIDIgnoreCase(transactionID) != null)
             {
@@ -61,7 +54,7 @@ class ClaimCommand : InitializingBean
 
             event.deferReply(true).queue()
 
-            if (transactionID.startsWith("tbx-"))
+            if (transactionID.toIntOrNull() == null)
             {
                 if (tebexPaymentPlatform.validate(detail, transactionID))
                 {
@@ -74,10 +67,14 @@ class ClaimCommand : InitializingBean
                     event.hook
                         .sendMessageEmbeds(Embed {
                             color = Colors.Success
+                            thumbnail = detail.picture
                             title = "License Key Created"
                             description = """
                                 Congrats! You have claimed a new license key for your ${detail.name} purchase!
+                                
                                 `${license.licenseKey}`
+                                
+                                **Use /license view to manage your licenses.** 
                                 
                                 *(do not share your license key with anyone!)*
                             """.trimIndent()
@@ -109,9 +106,11 @@ class ClaimCommand : InitializingBean
                     event.hook
                         .sendMessageEmbeds(Embed {
                             color = Colors.Success
+                            thumbnail = detail.picture
                             title = "License Key Created"
                             description = """
                                 Congrats! You have claimed a new license key for your ${detail.name} purchase!
+                                
                                 `${license.licenseKey}`
                                 
                                 *(do not share your license key with anyone!)*

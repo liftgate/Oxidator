@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class ProductAddQuestionCommand : Subcommand, InitializingBean
+class AddQuestionSub : Subcommand, InitializingBean
 {
     @Autowired lateinit var jda: JDA
 

@@ -11,6 +11,8 @@ class ProductDetails(
     val name: String,
     val price: Double,
     val description: String,
+    val picture: String? = null,
+    var associatedUserRole: Long? = null,
     @Indexed val tebexProductId: String,
     @Indexed var bbbProductId: String? = null,
     val questions: MutableList<ProductQuestion> = mutableListOf(),

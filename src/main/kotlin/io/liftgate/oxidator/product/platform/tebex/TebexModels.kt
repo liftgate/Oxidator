@@ -17,8 +17,7 @@ data class Transaction(
     @SerialName("currency") val currency: Currency,
     @SerialName("player") val player: Player,
     @SerialName("packages") val packages: List<Package>,
-    @SerialName("notes") val notes: List<Note>,
-    @SerialName("creator_code") val creatorCode: String
+    @SerialName("notes") val notes: List<Note>
 )
 
 @Serializable

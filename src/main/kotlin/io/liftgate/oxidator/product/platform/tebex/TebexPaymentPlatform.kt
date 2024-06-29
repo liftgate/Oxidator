@@ -3,6 +3,7 @@ package io.liftgate.oxidator.product.platform.tebex
 import io.liftgate.oxidator.product.details.ProductDetails
 import io.liftgate.oxidator.product.platform.PaymentPlatform
 import io.liftgate.oxidator.product.platform.PaymentPlatformType
+import io.liftgate.oxidator.utilities.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -20,10 +21,20 @@ class TebexPaymentPlatform : PaymentPlatform
     override fun validate(product: ProductDetails, transactionId: String): Boolean
     {
         val tebexTxn = kotlin
-            .runCatching { tebexService.transaction(transactionId).execute().body() }
+            .runCatching { tebexService.transaction(transactionId).execute() }
+            .onFailure {
+                logger.info(it) { "Failed to get transaction" }
+            }
             .getOrNull()
             ?: return false
 
-        return tebexTxn.packages.any { it.id == product.tebexProductId.toInt() }
+        val body = tebexTxn.body()
+        if (body == null)
+        {
+            logger.info { "Failed to get transaction: ${tebexTxn.errorBody()?.string()}" }
+            return false
+        }
+
+        return body.packages.any { it.id == product.tebexProductId.toInt() }
     }
 }

@@ -6,6 +6,9 @@ import dev.minn.jda.ktx.interactions.commands.subcommand
 import dev.minn.jda.ktx.interactions.commands.updateCommands
 import io.liftgate.oxidator.product.details.ProductDetailsRepository
 import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.Role
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Service
 
@@ -14,13 +17,14 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
 {
     fun updateCommands()
     {
+        val products =  productDetailsRepository.findAll()
         discord.updateCommands {
             slash(
                 name = "claim",
                 description = "Claim a license from your Tebex or BuiltByBit transaction ID."
             ) {
                 option<String>(name = "product", description = "The product in question.", required = true) {
-                    productDetailsRepository.findAll().forEach {
+                    products.forEach {
                         addChoice(it.name, it.productId.toString())
                     }
                 }
@@ -31,18 +35,24 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
                 name = "product",
                 description = "View all information on product commands!"
             ) {
+                defaultPermissions = DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)
+
                 subcommand(
-                    name = "detail",
-                    description = "Change or add product details"
+                    name = "setrole",
+                    description = "Set the purchaser role for this product."
                 ) {
-                    option<Long>("product-id", "What is the Id of the product?")
-                    option<String>("type", "What you want to change. Such as the name or description")
+                    option<String>("product", "The product in question.", required = true) {
+                        products.forEach {
+                            addChoice(it.name, it.productId.toString())
+                        }
+                    }
+                    option<Role>("role", "The role to be assigned.", required = true)
                 }
 
                 subcommand(
                     name = "add-question",
                     description = "Add a question to the product"
-                ) {}
+                )
             }
         }.queue()
     }
