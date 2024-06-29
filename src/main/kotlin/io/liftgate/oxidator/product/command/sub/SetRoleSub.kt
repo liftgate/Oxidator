@@ -17,7 +17,6 @@ import kotlin.jvm.optionals.getOrNull
 @Component
 class SetRoleSub : Subcommand
 {
-    @Autowired lateinit var jda: JDA
     @Autowired lateinit var productDetailsRepository: ProductDetailsRepository
 
     override fun handle(event: GenericCommandInteractionEvent)
