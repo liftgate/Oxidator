@@ -14,27 +14,28 @@ import org.springframework.stereotype.Component
  * @since 6/29/2024
  */
 @Component
-class SetRoleSub : Subcommand
+class SetPictureSub : Subcommand
 {
     @Autowired lateinit var productDetailsRepository: ProductDetailsRepository
 
     override fun handle(event: GenericCommandInteractionEvent)
     {
-        val role = event.getOption("role")?.asRole
+        val pictureURL = event.getOption("url")?.asString
             ?: return
         val detail = event.getProduct(productDetailsRepository)
             ?: return
 
         event.deferReply().queue()
 
-        detail.associatedUserRole = role.idLong
+        detail.picture = pictureURL
         productDetailsRepository.save(detail)
 
         event.hook.sendMessageEmbeds(Embed {
             color = Colors.Primary
-            title = "Set Role"
+            title = "Set Picture"
+            image = detail.picture
             description =
-                "The new role for ${detail.name} is: ${role.asMention}."
+                "The new picture for ${detail.picture} has been set."
         }).queue()
     }
 }

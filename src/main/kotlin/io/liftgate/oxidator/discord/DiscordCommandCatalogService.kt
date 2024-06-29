@@ -17,13 +17,16 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
 {
     fun updateCommands()
     {
-        val products =  productDetailsRepository.findAll()
+        val products = productDetailsRepository.findAll()
+
         discord.updateCommands {
             slash(
                 name = "claim",
                 description = "Claim a license from your Tebex or BuiltByBit transaction ID."
             ) {
-                option<String>(name = "product", description = "The product in question.", required = true) {
+                isGuildOnly = true
+
+                option<String>("product", "The product in question.", required = true) {
                     products.forEach {
                         addChoice(it.name, it.productId.toString())
                     }
@@ -36,6 +39,7 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
                 description = "View all information on product commands!"
             ) {
                 defaultPermissions = DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)
+                isGuildOnly = true
 
                 subcommand(
                     name = "setrole",
@@ -50,9 +54,63 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
                 }
 
                 subcommand(
+                    name = "setbbbresourceid",
+                    description = "Set the BuiltByBit resource ID for this product."
+                ) {
+                    option<String>("product", "The product in question.", required = true) {
+                        products.forEach {
+                            addChoice(it.name, it.productId.toString())
+                        }
+                    }
+                    option<Int>("resource-id", "The resource ID to be assigned.", required = true)
+                }
+
+                subcommand(
+                    name = "setname",
+                    description = "Set the name for this product."
+                ) {
+                    option<String>("product", "The product in question.", required = true) {
+                        products.forEach {
+                            addChoice(it.name, it.productId.toString())
+                        }
+                    }
+                    option<String>("name", "The name to be set.", required = true)
+                }
+
+                subcommand(
+                    name = "setdescription",
+                    description = "Set the description for this product."
+                ) {
+                    option<String>("product", "The product in question.", required = true) {
+                        products.forEach {
+                            addChoice(it.name, it.productId.toString())
+                        }
+                    }
+                    option<String>("name", "The description to be set.", required = true)
+                }
+
+                subcommand(
+                    name = "setpicture",
+                    description = "Set the picture URL for this product."
+                ) {
+                    option<String>("product", "The product in question.", required = true) {
+                        products.forEach {
+                            addChoice(it.name, it.productId.toString())
+                        }
+                    }
+                    option<String>("url", "The picture URL to be set.", required = true)
+                }
+
+                subcommand(
                     name = "add-question",
                     description = "Add a question to the product"
-                )
+                ) {
+                    option<String>("product", "The product in question.", required = true) {
+                        products.forEach {
+                            addChoice(it.name, it.productId.toString())
+                        }
+                    }
+                }
             }
         }.queue()
     }

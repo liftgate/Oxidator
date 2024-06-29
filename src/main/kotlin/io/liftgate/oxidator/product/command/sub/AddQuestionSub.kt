@@ -17,12 +17,7 @@ class AddQuestionSub : Subcommand, InitializingBean
 
     override fun handle(event: GenericCommandInteractionEvent)
     {
-        val modal = ModalBuilder("add-question", "Set Question Properties") {
-            this.short(
-                id = "product-id",
-                label = "Enter Product Id",
-                required = true
-            )
+        val modal = ModalBuilder("add-question", "Add Question") {
             this.short(
                 id = "question-id",
                 label = "Enter Question Id",
@@ -45,14 +40,13 @@ class AddQuestionSub : Subcommand, InitializingBean
             )
         }.build()
 
-        event.replyModal(modal)
+        event.replyModal(modal).queue()
     }
 
     override fun afterPropertiesSet()
     {
         jda.subscribeToModal("add-question") {
             val questionId = this.string("question-id")
-            val productId = this.string("product-id")
             val prompt = this.string("prompt")
             val freeResponse = this.string("free-response").lowercase().toBooleanStrictOrNull()
             val options = this.getValue("options")?.asString?.split(",")

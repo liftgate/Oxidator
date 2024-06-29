@@ -8,12 +8,12 @@ import org.springframework.data.mongodb.core.mapping.Document
 @Document(collection = "product-details")
 class ProductDetails(
     @Id val productId: Long = snowflake(),
-    val name: String,
+    var name: String,
     val price: Double,
-    val description: String,
-    val picture: String? = null,
+    var description: String,
+    var picture: String? = null,
     var associatedUserRole: Long? = null,
     @Indexed val tebexProductId: String,
-    @Indexed var bbbProductId: String? = null,
+    @Indexed var bbbProductId: Int? = null,
     val questions: MutableList<ProductQuestion> = mutableListOf(),
 )

@@ -14,27 +14,27 @@ import org.springframework.stereotype.Component
  * @since 6/29/2024
  */
 @Component
-class SetRoleSub : Subcommand
+class SetBBBResourceIDSub : Subcommand
 {
     @Autowired lateinit var productDetailsRepository: ProductDetailsRepository
 
     override fun handle(event: GenericCommandInteractionEvent)
     {
-        val role = event.getOption("role")?.asRole
+        val resourceID = event.getOption("resource-id")?.asInt
             ?: return
         val detail = event.getProduct(productDetailsRepository)
             ?: return
 
         event.deferReply().queue()
 
-        detail.associatedUserRole = role.idLong
+        detail.bbbProductId = resourceID
         productDetailsRepository.save(detail)
 
         event.hook.sendMessageEmbeds(Embed {
             color = Colors.Primary
-            title = "Set Role"
+            title = "Set Resource ID"
             description =
-                "The new role for ${detail.name} is: ${role.asMention}."
+                "The new BuiltByBit resource ID for ${detail.name} is: `$resourceID`."
         }).queue()
     }
 }

@@ -5,6 +5,7 @@ import dev.minn.jda.ktx.messages.Embed
 import io.liftgate.oxidator.product.details.ProductDetailsRepository
 import io.liftgate.oxidator.product.license.License
 import io.liftgate.oxidator.product.license.LicenseRepository
+import io.liftgate.oxidator.product.platform.PaymentPlatform
 import io.liftgate.oxidator.product.platform.PaymentPlatformType
 import io.liftgate.oxidator.product.platform.builtbybit.BuiltByBitPaymentPlatform
 import io.liftgate.oxidator.product.platform.tebex.TebexPaymentPlatform
@@ -54,13 +55,13 @@ class ClaimCommand : InitializingBean
 
             event.deferReply(true).queue()
 
-            if (transactionID.toIntOrNull() == null)
+            fun doValidation(platformType: PaymentPlatformType, platform: PaymentPlatform)
             {
-                if (tebexPaymentPlatform.validate(detail, transactionID))
+                if (platform.validate(detail, transactionID))
                 {
                     val license = licenseRepository.save(License(
                         discordUser = event.user.idLong,
-                        platform = PaymentPlatformType.Tebex,
+                        platform = platformType,
                         associatedTxnID = transactionID
                     ))
 
@@ -80,56 +81,38 @@ class ClaimCommand : InitializingBean
                             """.trimIndent()
                         })
                         .setEphemeral(true)
-                        .queue()
+                        .queue {
+                            if (detail.associatedUserRole == null)
+                            {
+                                return@queue
+                            }
+
+                            val userRole = event.guild!!
+                                .getRoleById(detail.associatedUserRole!!)
+                                ?: return@queue
+
+                            event.guild!!.addRoleToMember(event.user, userRole).queue()
+                        }
                 } else
                 {
                     event.hook
                         .sendMessageEmbeds(Embed {
                             color = Colors.Failure
-                            title = "Invalid Tebex Transaction ID"
+                            title = "Invalid $platformType Transaction ID"
                             description =
-                                "Your Tebex transaction ID is invalid. Please contact support staff if you feel this is a mistake."
+                                "Your $platformType transaction ID is invalid. Please contact support staff if you feel this is a mistake."
                         })
                         .setEphemeral(true)
                         .queue()
                 }
+            }
+
+            if (transactionID.toIntOrNull() == null)
+            {
+                doValidation(platformType = PaymentPlatformType.Tebex, platform = tebexPaymentPlatform)
             } else
             {
-                if (builtByBitPaymentPlatform.validate(detail, transactionID))
-                {
-                    val license = licenseRepository.save(License(
-                        discordUser = event.user.idLong,
-                        platform = PaymentPlatformType.BuiltByBit,
-                        associatedTxnID = transactionID
-                    ))
-
-                    event.hook
-                        .sendMessageEmbeds(Embed {
-                            color = Colors.Success
-                            thumbnail = detail.picture
-                            title = "License Key Created"
-                            description = """
-                                Congrats! You have claimed a new license key for your ${detail.name} purchase!
-                                
-                                `${license.licenseKey}`
-                                
-                                *(do not share your license key with anyone!)*
-                            """.trimIndent()
-                        })
-                        .setEphemeral(true)
-                        .queue()
-                } else
-                {
-                    event.hook
-                        .sendMessageEmbeds(Embed {
-                            color = Colors.Failure
-                            title = "Invalid BuiltByBit Transaction ID"
-                            description =
-                                "Your BuiltByBit transaction ID is invalid. Please contact support staff if you feel this is a mistake."
-                        })
-                        .setEphemeral(true)
-                        .queue()
-                }
+                doValidation(platformType = PaymentPlatformType.BuiltByBit, platform = builtByBitPaymentPlatform)
             }
         }
     }
