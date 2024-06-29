@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 class ProductDetails(
     @Id val productId: Long = snowflake(),
     val name: String,
+    val price: Double,
     val description: String,
     @Indexed val tebexProductId: String,
     @Indexed var bbbProductId: String? = null,

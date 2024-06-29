@@ -4,6 +4,7 @@ import io.liftgate.oxidator.discord.DiscordCommandCatalogService
 import io.liftgate.oxidator.product.details.ProductDetails
 import io.liftgate.oxidator.product.details.ProductDetailsRepository
 import io.liftgate.oxidator.product.platform.tebex.TebexService
+import io.liftgate.oxidator.utilities.ERROR_COLOUR
 import io.liftgate.oxidator.utilities.INFO_COLOUR
 import io.liftgate.oxidator.utilities.WARN_COLOUR
 import io.liftgate.oxidator.utilities.logger
@@ -32,7 +33,14 @@ class ProductService(
         var shouldUpdateCatalog = false
         logger.info { "${INFO_COLOUR}Updating products catalog:" }
 
-        tebexService.packages().execute().body()
+        val call = tebexService.packages().execute()
+        if (!call.isSuccessful)
+        {
+            logger.info { "${ERROR_COLOUR}Failed to sync products. ${call.message()}, ${call.errorBody()?.string()}" }
+            return
+        }
+
+        call.body()
             ?.filter { it.category.name == tebexCategory }
             ?.forEach {
                 val product = productDetailsRepository.findByTebexProductId(it.id.toString())
@@ -45,6 +53,7 @@ class ProductService(
                 productDetailsRepository.save(ProductDetails(
                     name = it.name,
                     tebexProductId = it.id.toString(),
+                    price = it.price,
                     description = ""
                 ))
                 logger.info { "  | ${WARN_COLOUR}Created a new ProductDetail for the ${it.name} package." }

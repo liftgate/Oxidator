@@ -23,7 +23,6 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
                 description = "Claim a license from your Tebex or BuiltByBit transaction ID."
             ) {
                 option<String>(name = "product", description = "The product in question.") {
-                    isAutoComplete = true
                     productDetailsRepository.findAll().forEach {
                         addChoice(it.productId.toString(), it.name.lowercase())
                     }

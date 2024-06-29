@@ -17,6 +17,11 @@ class RetrofitConfiguration
     @Value("\${oxidator.tebex.apikey}") lateinit var tebexApiKey: String
 
     @Bean
+    fun json() = Json {
+        ignoreUnknownKeys = true
+    }
+
+    @Bean
     fun tebexService() = retrofit().create(TebexService::class.java)
 
     @Bean
@@ -33,7 +38,7 @@ class RetrofitConfiguration
         return Retrofit.Builder()
             .client(httpClient.build())
             .baseUrl("https://plugin.tebex.io/")
-            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(json().asConverterFactory("application/json".toMediaType()))
             .build()
     }
 }
