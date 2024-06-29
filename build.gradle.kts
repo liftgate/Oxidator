@@ -37,6 +37,10 @@ dependencies {
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
     implementation("com.github.LeeGodSRC:builtbybit-kotlin-api-wrapper:1.0.3")
 
+    implementation("com.google.guava:guava:33.2.1-jre")
+    implementation("commons-codec:commons-codec:1.17.0")
+    implementation("commons-io:commons-io:2.16.1")
+
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-jersey")

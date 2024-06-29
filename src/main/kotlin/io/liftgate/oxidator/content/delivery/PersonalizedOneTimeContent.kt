@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.DBRef
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.Instant
 
 /**
  * @author GrowlyX
@@ -16,5 +17,11 @@ data class PersonalizedOneTimeContent(
     @Id val id: Long = snowflake(),
     @Indexed val sha256Hash: String,
     @DBRef val associatedLicense: License,
-    @Indexed val contentVersion: String
+    @Indexed val contentVersion: String,
+    val associatedContentID: Long,
+    val creationTime: Long = Instant.now()
+        .toEpochMilli(),
+    val expirationTime: Long = Instant.now()
+        .plusSeconds(60 * 10)
+        .toEpochMilli()
 )
