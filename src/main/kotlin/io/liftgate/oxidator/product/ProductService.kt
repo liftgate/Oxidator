@@ -32,9 +32,9 @@ class ProductService(
         var shouldUpdateCatalog = false
         logger.info { "${INFO_COLOUR}Updating products catalog:" }
 
-        tebexService.packages()
-            .filter { it.category.name == tebexCategory }
-            .forEach {
+        tebexService.packages().execute().body()
+            ?.filter { it.category.name == tebexCategory }
+            ?.forEach {
                 val product = productDetailsRepository.findByTebexProductId(it.id.toString())
                 if (product != null)
                 {
