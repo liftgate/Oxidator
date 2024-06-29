@@ -9,4 +9,5 @@ import org.springframework.data.mongodb.repository.MongoRepository
 interface ProductDetailsRepository : MongoRepository<ProductDetails, Long>
 {
     fun findByTebexProductId(productId: String): ProductDetails?
+    fun findByNameIgnoreCase(name: String): ProductDetails?
 }

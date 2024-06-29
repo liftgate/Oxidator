@@ -24,7 +24,7 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
             ) {
                 option<String>(name = "product", description = "The product in question.") {
                     productDetailsRepository.findAll().forEach {
-                        addChoice(it.productId.toString(), it.name.lowercase())
+                        addChoice(it.name, it.productId.toString())
                     }
                 }
                 option<String>(name = "transaction-id", description = "The transaction ID.")

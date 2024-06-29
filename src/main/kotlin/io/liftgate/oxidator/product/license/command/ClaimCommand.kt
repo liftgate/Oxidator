@@ -28,11 +28,10 @@ class ClaimCommand(
     fun postConstruct()
     {
         client.onCommand("claim") { event ->
-            val product = event.getOption("product")
-                ?.name?.toLongOrNull()
+            val product = event.getOption("product")?.name
                 ?: return@onCommand
 
-            val detail = productDetailsRepository.findById(product).getOrNull()
+            val detail = productDetailsRepository.findByNameIgnoreCase(product)
                 ?: return@onCommand
 
             val transactionID = event.getOption("transaction-id")?.asString!!

@@ -17,7 +17,7 @@ class DiscordConfiguration
     @Value("\${oxidator.discord.token}") lateinit var token: String
 
     @Bean
-    fun discordClient() = light(token) {
+    fun discordClient() = light(token, enableCoroutines = true) {
         intents += setOf(GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT)
     }
 }
