@@ -11,4 +11,7 @@ interface TebexService
 {
     @GET("/payments/{transaction}")
     fun transaction(@Path("transaction") transaction: String): Transaction
+
+    @GET("/packages")
+    fun packages(): List<PackageDetail>
 }

@@ -18,4 +18,5 @@ oxidator:
   discord:
     token: "CHANGE ME"
   tebex:
+    category: "Software"
     apikey: "CHANGE ME"
