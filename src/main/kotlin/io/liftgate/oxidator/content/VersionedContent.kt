@@ -1,6 +1,7 @@
 package io.liftgate.oxidator.content
 
 import io.liftgate.oxidator.content.delivery.ContentScope
+import io.liftgate.oxidator.product.details.ProductDetails
 import io.liftgate.oxidator.product.license.License
 import io.liftgate.oxidator.utilities.snowflake
 import org.springframework.data.annotation.Id
@@ -14,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 @Document(collection = "versioned-content")
 data class VersionedContent(
     @Id val id: Long = snowflake(),
-    val productID: Long,
+    @DBRef val product: ProductDetails,
     val version: String,
     val contentDataSourceID: String,
     val contentScope: ContentScope = ContentScope.Global,
