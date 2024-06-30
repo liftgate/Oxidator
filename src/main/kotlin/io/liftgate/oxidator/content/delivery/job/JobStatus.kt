@@ -6,5 +6,5 @@ package io.liftgate.oxidator.content.delivery.job
  */
 enum class JobStatus
 {
-    Pending, InProgress, Complete, Failed
+    Pending, InProgress, Complete
 }

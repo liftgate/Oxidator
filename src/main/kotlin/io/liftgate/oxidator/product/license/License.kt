@@ -21,6 +21,7 @@ data class License(
     @Indexed val associatedProduct: Long,
     val buddies: MutableList<Long> = mutableListOf(),
     val platform: PaymentPlatformType,
+    val expiration: Long? = null,
     val licenseKey: String = RandomStringUtils.random(
         40, 0, 0,
         true, true,

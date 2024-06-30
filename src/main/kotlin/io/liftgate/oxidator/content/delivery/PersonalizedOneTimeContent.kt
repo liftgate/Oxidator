@@ -19,6 +19,8 @@ data class PersonalizedOneTimeContent(
     @DBRef val associatedLicense: License,
     @Indexed val contentVersion: String,
     val associatedContentID: Long,
+    val contentDataSource: String,
+    var accessed: Long? = null,
     val creationTime: Long = Instant.now()
         .toEpochMilli(),
     val expirationTime: Long = Instant.now()

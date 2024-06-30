@@ -10,6 +10,7 @@ import java.io.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 /**
  * @author GrowlyX
@@ -18,14 +19,19 @@ import java.util.zip.ZipFile;
 public enum ContentCustomizerUtilities {
     INSTANCE;
 
-    public static void customizeJar(File originalJar, File newJar,
+    public static void customizeJar(InputStream originalJar, OutputStream newSource,
                                         PersonalizationJob job, ContentCustomizer contentCustomizer) throws IOException {
         // Create a temporary directory to extract the original jar
         File tempDir = Files.createTempDir();
         tempDir.deleteOnExit();
 
+        File tempFile = new File(tempDir, "tmpjar");
+        tempFile.createNewFile();
+
+        FileUtils.copyToFile(originalJar, tempFile);
+
         // Extract the original jar contents
-        try (ZipFile zipFile = new ZipFile(originalJar)) {
+        try (ZipFile zipFile = new ZipFile(tempFile)) {
             zipFile.stream().forEach(entry -> {
                 try (InputStream is = zipFile.getInputStream(entry)) {
                     File outFile = new File(tempDir, entry.getName());
@@ -44,7 +50,7 @@ public enum ContentCustomizerUtilities {
         contentCustomizer.customize(job, tempDir);
 
         // Create a new jar file with the original contents plus the metadata file
-        try (JarOutputStream jos = new JarOutputStream(new FileOutputStream(newJar))) {
+        try (JarOutputStream jos = new JarOutputStream(newSource)) {
             addDirectoryToJar(jos, tempDir, tempDir.getAbsolutePath().length() + 1);
         }
 
