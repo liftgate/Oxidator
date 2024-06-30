@@ -9,5 +9,6 @@ import org.springframework.data.mongodb.repository.MongoRepository
 interface LicenseRepository : MongoRepository<License, Long>
 {
     fun findAllByDiscordUser(user: Long): List<License>
+    fun findByDiscordUserAndAssociatedProduct(user: Long, associatedProduct: Long): License?
     fun findByAssociatedTxnIDIgnoreCase(txnID: String): License?
 }

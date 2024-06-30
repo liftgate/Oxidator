@@ -8,6 +8,7 @@ import io.liftgate.oxidator.product.details.ProductDetailsRepository
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Role
+import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Service
@@ -47,6 +48,36 @@ class DiscordCommandCatalogService(private val discord: JDA, private val product
                     name = "view",
                     description = "View all of your licenses."
                 )
+
+                subcommand(
+                    name = "addbuddy",
+                    description = "Add a buddy to a product license."
+                ) {
+                    isGuildOnly = true
+
+                    option<String>("product", "The product in question.", required = true) {
+                        products.forEach {
+                            addChoice(it.name, it.id.toString())
+                        }
+                    }
+
+                    option<User>("user", "The user to assign as a buddy", required = true)
+                }
+
+                subcommand(
+                    name = "removebuddy",
+                    description = "Remove a buddy from a product license."
+                ) {
+                    isGuildOnly = true
+
+                    option<String>("product", "The product in question.", required = true) {
+                        products.forEach {
+                            addChoice(it.name, it.id.toString())
+                        }
+                    }
+
+                    option<User>("user", "The user to remove from buddies list.", required = true)
+                }
             }
 
             slash(

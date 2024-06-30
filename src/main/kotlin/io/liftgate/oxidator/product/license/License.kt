@@ -19,7 +19,7 @@ data class License(
     @Id val id: Long = snowflake(),
     @Indexed val discordUser: Long,
     @Indexed val associatedProduct: Long,
-    val buddies: MutableList<Long> = mutableListOf(),
+    val buddies: MutableSet<Long> = mutableSetOf(),
     val platform: PaymentPlatformType,
     val expiration: Long? = null,
     val licenseKey: String = RandomStringUtils.random(
