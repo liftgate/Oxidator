@@ -30,7 +30,7 @@ repositories {
 dependencies {
     implementation("club.minnced:jda-ktx:0.11.0-beta.20")
     implementation("net.dv8tion:JDA:5.0.0-beta.24") {
-        exclude(module="opus-java")
+        exclude(module = "opus-java")
     }
 
     implementation("org.apache.commons:commons-lang3:3.14.0")
@@ -50,7 +50,6 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
     implementation("com.squareup.retrofit2:converter-kotlinx-serialization:2.11.0")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

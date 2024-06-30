@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 @Document(collection = "versioned-content")
 data class VersionedContent(
     @Id val id: Long = snowflake(),
+    val name: String,
     @DBRef val product: ProductDetails,
     val version: String,
     val contentDataSourceID: String,

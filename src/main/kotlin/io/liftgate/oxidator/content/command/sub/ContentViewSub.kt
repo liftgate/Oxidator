@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
  * @since 6/30/2024
  */
 @Component
-class ViewSub : Subcommand
+class ContentViewSub : Subcommand
 {
     @Autowired
     lateinit var licenseRepository: LicenseRepository

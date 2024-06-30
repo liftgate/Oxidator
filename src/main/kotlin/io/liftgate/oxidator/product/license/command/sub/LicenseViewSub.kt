@@ -15,7 +15,7 @@ import kotlin.jvm.optionals.getOrNull
  * @since 6/29/2024
  */
 @Component
-class ViewSub : Subcommand
+class LicenseViewSub : Subcommand
 {
     @Autowired
     lateinit var licenseRepository: LicenseRepository

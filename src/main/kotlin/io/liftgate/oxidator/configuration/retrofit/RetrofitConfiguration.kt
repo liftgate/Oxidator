@@ -26,6 +26,9 @@ class RetrofitConfiguration
     fun tebexService() = tebexRetrofit().create(TebexService::class.java)
 
     @Bean
+    fun okHttpClient() = OkHttpClient.Builder().build()
+
+    @Bean
     fun tebexRetrofit(): Retrofit
     {
         val httpClient = OkHttpClient.Builder()

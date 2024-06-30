@@ -4,28 +4,27 @@ import dev.minn.jda.ktx.interactions.commands.option
 import dev.minn.jda.ktx.interactions.commands.slash
 import dev.minn.jda.ktx.interactions.commands.subcommand
 import dev.minn.jda.ktx.interactions.commands.updateCommands
-import io.liftgate.oxidator.content.source.ContentDataSource
 import io.liftgate.oxidator.product.details.ProductDetailsRepository
+import io.liftgate.oxidator.utilities.logger
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.Message.Attachment
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions
+import net.dv8tion.jda.api.interactions.commands.OptionType
 import org.springframework.beans.factory.InitializingBean
-import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Service
 
 @Service
 class DiscordCommandCatalogService(
     private val discord: JDA,
-    private val productDetailsRepository: ProductDetailsRepository,
-    private val context: ApplicationContext
+    private val productDetailsRepository: ProductDetailsRepository
 ) : InitializingBean
 {
     fun updateCommands()
     {
         val products = productDetailsRepository.findAll()
+        logger.info { "Attempting to update commands..." }
 
         discord.updateCommands {
             slash(
@@ -51,6 +50,9 @@ class DiscordCommandCatalogService(
                 name = "content",
                 description = "View all Liftgate content information and actions!"
             ) {
+                defaultPermissions = DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)
+                isGuildOnly = true
+
                 subcommand(
                     name = "view",
                     description = "View all of content in the system."
@@ -62,18 +64,21 @@ class DiscordCommandCatalogService(
                     name = "upload",
                     description = "Upload new content."
                 ) {
-                    defaultPermissions = DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)
-                    isGuildOnly = true
-
                     option<String>("product", "The product in question.", required = true) {
                         products.forEach {
                             addChoice(it.name, it.id.toString())
                         }
                     }
 
-                    option<Attachment>("file", "The content file.", required = true)
+                    addOption(
+                        OptionType.ATTACHMENT,
+                        "file",
+                        "The content file.",
+                        true
+                    )
 
-                    option<String>("version", "The content's version.")
+                    option<String>("version", "The content's version.", required = true)
+
                     option<User>("user", "The user which holds access to this content.")
                     option<String>("datasource", "The storage system in which the content will be held.") {
                         addChoice("gridfs", "GridFS")
