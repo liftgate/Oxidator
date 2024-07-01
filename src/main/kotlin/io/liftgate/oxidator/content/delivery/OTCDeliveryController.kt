@@ -53,8 +53,6 @@ class OTCDeliveryController(
         content.accessed = Instant.now().toEpochMilli()
         otcRepository.save(content)
 
-        dataSource.delete(content.id)
-
         return ResponseEntity.ok()
             .contentType(MediaType.parseMediaType("application/java-archive"))
             .body(InputStreamResource(inputStream))

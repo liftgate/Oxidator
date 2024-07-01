@@ -17,6 +17,7 @@ oxidator:
   builtbybit:
     secret: "CHANGE ME"
   discord:
+    guild: "CHANGE ME"
     token: "CHANGE ME"
   tebex:
     category: "Software"

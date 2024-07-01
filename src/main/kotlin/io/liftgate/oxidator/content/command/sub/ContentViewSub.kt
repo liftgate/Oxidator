@@ -68,6 +68,7 @@ class ContentViewSub : Subcommand
                         color = Colors.Primary
                         title = "Content${if (user == null) "" else " for ${user.asMention}" } (${index + 1}/${allContent.size})"
 
+                        description = ""
                         for (versionedContent in content)
                         {
                             description += "\n> ${versionedContent.product.name} (${versionedContent.version}): ${versionedContent.name}"

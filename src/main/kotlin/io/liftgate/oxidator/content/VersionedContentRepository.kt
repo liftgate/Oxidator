@@ -16,5 +16,13 @@ interface VersionedContentRepository : MongoRepository<VersionedContent, Long>
         contentScope: ContentScope,
         associatedLicense: License?,
     ): List<VersionedContent>
+
+    fun findByProductAndContentScopeEqualsOrAssociatedLicenseEqualsAndVersionEquals(
+        productDetails: ProductDetails,
+        contentScope: ContentScope,
+        associatedLicense: License?,
+        version: String
+    ): VersionedContent?
+
     fun findAllByAssociatedLicense(associatedLicense: License): List<VersionedContent>
 }

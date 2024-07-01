@@ -1,9 +1,11 @@
 package io.liftgate.oxidator.content.delivery.job
 
+import io.liftgate.oxidator.content.VersionedContent
 import io.liftgate.oxidator.content.delivery.ContentCustomizerUtilities
 import io.liftgate.oxidator.content.delivery.OTCRepository
 import io.liftgate.oxidator.content.delivery.PersonalizedOneTimeContent
 import io.liftgate.oxidator.content.source.ContentDataSource
+import io.liftgate.oxidator.product.license.License
 import io.liftgate.oxidator.utilities.INFO_COLOUR
 import io.liftgate.oxidator.utilities.WARN_COLOUR
 import io.liftgate.oxidator.utilities.logger
@@ -37,6 +39,10 @@ class PersonalizationJobService : Runnable, InitializingBean
         jobs += job
     }
 
+    fun hasExisting(license: License, content: VersionedContent) = jobs.any {
+        it.license == license && it.content == content
+    }
+
     override fun run()
     {
         if (jobs.isEmpty())
@@ -58,7 +64,7 @@ class PersonalizationJobService : Runnable, InitializingBean
                 .load(currentJob.content.id)
                 ?: return run {
                     logger.info { "Failed to find content in data source" }
-                    jobs.pop()
+                    jobs.removeFirst()
                 }
 
             logger.info { "${WARN_COLOUR}Customizing jar..." }

@@ -18,8 +18,8 @@ class GridFsDataSource(private val gridFsTemplate: GridFsTemplate) : ContentData
         return gridFsTemplate
             .find(Query.query(
                 Criteria
-                    .where("metadata.contentID")
-                    .`is`(contentID)
+                    .where("filename")
+                    .`is`("$contentID")
             ))
             .firstOrNull()
             ?.let {
@@ -31,15 +31,15 @@ class GridFsDataSource(private val gridFsTemplate: GridFsTemplate) : ContentData
     {
         return gridFsTemplate.delete(Query.query(
             Criteria
-                .where("metadata.contentID")
-                .`is`(contentID)
+                .where("filename")
+                .`is`("$contentID")
         ))
     }
 
     override fun store(contentID: Long, contentType: String, data: InputStream): String
     {
         return gridFsTemplate
-            .store(data, "$contentID", contentType, mapOf("contentID" to contentID.toShort()))
+            .store(data, "$contentID", contentType)
             .toHexString()
     }
 }
