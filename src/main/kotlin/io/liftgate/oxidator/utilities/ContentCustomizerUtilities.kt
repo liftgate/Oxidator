@@ -1,75 +1,73 @@
-package io.liftgate.oxidator.content.delivery;
+package io.liftgate.oxidator.utilities
 
-
-import com.google.common.io.Files;
-import io.liftgate.oxidator.content.delivery.job.PersonalizationJob;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-
-import java.io.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
+import io.liftgate.oxidator.content.delivery.ContentCustomizer
+import io.liftgate.oxidator.content.delivery.job.PersonalizationJob
+import java.io.*
+import java.nio.file.Files
+import java.util.jar.JarEntry
+import java.util.jar.JarInputStream
+import java.util.jar.JarOutputStream
+import java.util.zip.ZipEntry
 
 /**
  * @author GrowlyX
  * @since 6/29/2024
  */
-public enum ContentCustomizerUtilities {
-    INSTANCE;
+fun processJar(inputStream: InputStream, personalizationJob: PersonalizationJob, contentCustomizer: ContentCustomizer): InputStream {
+    // Create a temporary directory to extract the jar contents
+    val tempDir = Files.createTempDirectory("jar_extraction").toFile()
+    val outputJarFile = Files.createTempFile("customized_jar", ".jar").toFile()
 
-    public static void customizeJar(InputStream originalJar, OutputStream newSource,
-                                        PersonalizationJob job, ContentCustomizer contentCustomizer) throws IOException {
-        // Create a temporary directory to extract the original jar
-        File tempDir = Files.createTempDir();
-        tempDir.deleteOnExit();
+    try {
+        // Extract the contents of the jar file to the temp directory
+        extractJar(inputStream, tempDir)
 
-        File tempFile = new File(tempDir, "tmpjar");
-        tempFile.createNewFile();
+        // Apply the customizer to the extracted contents
+        contentCustomizer.customize(personalizationJob, tempDir)
 
-        FileUtils.copyToFile(originalJar, tempFile);
+        // Repackage the contents of the temp directory into a new jar file
+        createJar(tempDir, outputJarFile)
 
-        // Extract the original jar contents
-        try (ZipFile zipFile = new ZipFile(tempFile)) {
-            zipFile.stream().forEach(entry -> {
-                try (InputStream is = zipFile.getInputStream(entry)) {
-                    File outFile = new File(tempDir, entry.getName());
-                    if (entry.isDirectory()) {
-                        outFile.mkdirs();
-                    } else {
-                        FileUtils.copyInputStreamToFile(is, outFile);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-
-        // Add the new metadata file to the temporary directory
-        contentCustomizer.customize(job, tempDir);
-
-        // Create a new jar file with the original contents plus the metadata file
-        try (JarOutputStream jos = new JarOutputStream(newSource)) {
-            addDirectoryToJar(jos, tempDir, tempDir.getAbsolutePath().length() + 1);
-        }
-
-        // Clean up the temporary directory
-        FileUtils.deleteDirectory(tempDir);
+        // Return an InputStream of the new jar file
+        return outputJarFile.inputStream()
+    } finally {
+        // Cleanup temporary files
+        tempDir.deleteRecursively()
+        outputJarFile.deleteOnExit()
     }
+}
 
-    private static void addDirectoryToJar(JarOutputStream jos, File dir, int prefixLength) throws IOException {
-        for (File file : dir.listFiles()) {
-            if (file.isDirectory()) {
-                addDirectoryToJar(jos, file, prefixLength);
+private fun extractJar(inputStream: InputStream, destDir: File) {
+    JarInputStream(inputStream).use { jarInputStream ->
+        var entry: JarEntry?
+        while (jarInputStream.nextJarEntry.also { entry = it } != null) {
+            val entryFile = File(destDir, entry!!.name)
+            if (entry!!.isDirectory) {
+                entryFile.mkdirs()
             } else {
-                String entryName = file.getAbsolutePath().substring(prefixLength).replace('\\', '/');
-                jos.putNextEntry(new JarEntry(entryName));
-                try (FileInputStream fis = new FileInputStream(file)) {
-                    IOUtils.copy(fis, jos);
+                entryFile.parentFile.mkdirs()
+                entryFile.outputStream().use { output ->
+                    jarInputStream.copyTo(output)
                 }
-                jos.closeEntry();
             }
         }
     }
+}
+
+private fun createJar(sourceDir: File, jarFile: File) {
+    JarOutputStream(BufferedOutputStream(FileOutputStream(jarFile))).use { jarOutputStream ->
+        Files.walk(sourceDir.toPath()).filter { path -> !Files.isDirectory(path) }.forEach { path ->
+            val entryName = sourceDir.toPath().relativize(path).toString().replace(File.separatorChar, '/')
+            val entry = ZipEntry(entryName)
+            jarOutputStream.putNextEntry(entry)
+            Files.newInputStream(path).use { input ->
+                input.copyTo(jarOutputStream)
+            }
+            logger.info { "Packing $entryName into jar right now" }
+            jarOutputStream.closeEntry()
+        }
+    }
+
+
+    logger.info { "Final length: ${jarFile.length()}" }
 }

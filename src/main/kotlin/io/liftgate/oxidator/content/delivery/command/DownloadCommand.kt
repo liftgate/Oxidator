@@ -115,6 +115,7 @@ class DownloadCommand : InitializingBean
             personalizationJobService.addToQueue(PersonalizationJob(
                 license = license,
                 content = versionedContent,
+                user = event.user,
                 customizer = object : ContentCustomizer
                 {
                     override fun customize(job: PersonalizationJob, directory: File)
