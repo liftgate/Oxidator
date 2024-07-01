@@ -74,9 +74,8 @@ class DownloadCommand : InitializingBean
                 return@onCommand
             }
 
-            val versionedContent = versionedContentRepository.findByProductAndContentScopeEqualsOrAssociatedLicenseEqualsAndVersionEquals(
+            val versionedContent = versionedContentRepository.findMatchingContentAvailableToLicense(
                 productDetails = product,
-                contentScope = ContentScope.Global,
                 associatedLicense = license,
                 version = version,
             )

@@ -74,7 +74,7 @@ class PersonalizationJobService : Runnable, InitializingBean
                 currentJob.customizer
             )
 
-            val digest = DigestUtils.sha256Hex(inputStream)
+            val digest = DigestUtils.sha256Hex(inputStream.inputStream())
             val oneTimeContent = PersonalizedOneTimeContent(
                 sha256Hash = digest,
                 associatedLicense = currentJob.license,
@@ -88,7 +88,7 @@ class PersonalizationJobService : Runnable, InitializingBean
                 oneTimeContent.id,
                 "otc",
                 "application/java-archive",
-                inputStream
+                inputStream.inputStream()
             )
 
             logger.info { "${INFO_COLOUR}Uploaded customized jar!" }
