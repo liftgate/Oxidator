@@ -47,6 +47,24 @@ class DiscordCommandCatalogService(
             )
 
             slash(
+                name = "download",
+                description = "Get a one-time download link for a Liftgate product you have a license to!"
+            ) {
+                option<String>("product", "The product in question.", required = true) {
+                    products.forEach {
+                        addChoice(it.name, it.id.toString())
+                    }
+                }
+
+                option<String>(
+                    name = "version",
+                    description = "The version you want to download.",
+                    required = true,
+                    autocomplete = true
+                )
+            }
+
+            slash(
                 name = "content",
                 description = "View all Liftgate content information and actions!"
             ) {
@@ -81,7 +99,7 @@ class DiscordCommandCatalogService(
 
                     option<User>("user", "The user which holds access to this content.")
                     option<String>("datasource", "The storage system in which the content will be held.") {
-                        addChoice("gridfs", "GridFS")
+                        addChoice("GridFs", "gridfs")
                     }
                 }
             }

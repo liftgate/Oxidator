@@ -1,5 +1,6 @@
 package io.liftgate.oxidator.content.delivery
 
+import io.liftgate.oxidator.content.VersionedContent
 import io.liftgate.oxidator.product.license.License
 import io.liftgate.oxidator.utilities.snowflake
 import org.springframework.data.annotation.Id
@@ -17,8 +18,7 @@ data class PersonalizedOneTimeContent(
     @Id val id: Long = snowflake(),
     @Indexed val sha256Hash: String,
     @DBRef val associatedLicense: License,
-    @Indexed val contentVersion: String,
-    val associatedContentID: Long,
+    @DBRef val associatedContent: VersionedContent,
     val contentDataSource: String,
     var accessed: Long? = null,
     val creationTime: Long = Instant.now()

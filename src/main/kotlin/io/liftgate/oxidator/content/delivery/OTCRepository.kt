@@ -7,5 +7,3 @@ import org.springframework.data.mongodb.repository.MongoRepository
  * @since 6/29/2024
  */
 interface OTCRepository : MongoRepository<PersonalizedOneTimeContent, Long>
-{
-}

@@ -4,6 +4,8 @@ import io.liftgate.oxidator.content.delivery.ContentCustomizerUtilities
 import io.liftgate.oxidator.content.delivery.OTCRepository
 import io.liftgate.oxidator.content.delivery.PersonalizedOneTimeContent
 import io.liftgate.oxidator.content.source.ContentDataSource
+import io.liftgate.oxidator.utilities.INFO_COLOUR
+import io.liftgate.oxidator.utilities.WARN_COLOUR
 import io.liftgate.oxidator.utilities.logger
 import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.beans.factory.InitializingBean
@@ -24,9 +26,6 @@ import kotlin.concurrent.thread
 class PersonalizationJobService : Runnable, InitializingBean
 {
     @Autowired
-    lateinit var gridFsTemplate: GridFsTemplate
-
-    @Autowired
     lateinit var otcRepository: OTCRepository
 
     @Autowired
@@ -45,47 +44,54 @@ class PersonalizationJobService : Runnable, InitializingBean
             return
         }
 
-        val currentJob = jobs.peekFirst()
-        currentJob.status = JobStatus.InProgress
+        runCatching {
+            val currentJob = jobs.peekFirst()
+            currentJob.status = JobStatus.InProgress
 
-        val newFile = File.createTempFile(UUID.randomUUID().toString(), "-modified")
-        val dataSource = applicationContext
-            .getBean<ContentDataSource>(currentJob.contentDataSourceID)
+            logger.info { "${INFO_COLOUR}Started new job. ${currentJob.content.id}" }
 
-        val contentInputStream = dataSource
-            .load(currentJob.contentID)
-            ?: return run {
-                logger.info { "Failed to find content in data source" }
-                jobs.pop()
-            }
+            val newFile = File.createTempFile(UUID.randomUUID().toString(), "-modified")
+            val dataSource = applicationContext
+                .getBean<ContentDataSource>(currentJob.content.contentDataSourceID)
 
-        logger.info { "Customizing jar..." }
-        ContentCustomizerUtilities.customizeJar(
-            contentInputStream,
-            newFile.outputStream(),
-            currentJob,
-            currentJob.customizer
-        )
+            val contentInputStream = dataSource
+                .load(currentJob.content.id)
+                ?: return run {
+                    logger.info { "Failed to find content in data source" }
+                    jobs.pop()
+                }
 
-        val inputStream = newFile.inputStream()
+            logger.info { "${WARN_COLOUR}Customizing jar..." }
+            ContentCustomizerUtilities.customizeJar(
+                contentInputStream,
+                newFile.outputStream(),
+                currentJob,
+                currentJob.customizer
+            )
 
-        val digest = DigestUtils.sha256Hex(inputStream)
-        val oneTimeContent = PersonalizedOneTimeContent(
-            sha256Hash = digest,
-            associatedLicense = currentJob.license,
-            contentVersion = currentJob.version,
-            associatedContentID = currentJob.contentID,
-            contentDataSource = currentJob.contentDataSourceID
-        )
+            val inputStream = newFile.inputStream()
 
-        otcRepository.save(oneTimeContent)
-        dataSource.store(
-            oneTimeContent.id,
-            "application/java-archive",
-            inputStream
-        )
+            val digest = DigestUtils.sha256Hex(inputStream)
+            val oneTimeContent = PersonalizedOneTimeContent(
+                sha256Hash = digest,
+                associatedLicense = currentJob.license,
+                associatedContent = currentJob.content,
+                contentDataSource = currentJob.content.contentDataSourceID
+            )
 
-        currentJob.status = JobStatus.Complete
+            logger.info { "${WARN_COLOUR}Customized jar. Saving..." }
+            otcRepository.save(oneTimeContent)
+            dataSource.store(
+                oneTimeContent.id,
+                "application/java-archive",
+                inputStream
+            )
+
+            logger.info { "${INFO_COLOUR}Uploaded customized jar!" }
+            currentJob.status = JobStatus.Complete
+        }.onFailure {
+            logger.warn(it) { "Failed during job run" }
+        }
         jobs.removeFirst()
     }
 
@@ -96,7 +102,7 @@ class PersonalizationJobService : Runnable, InitializingBean
             {
                 kotlin.runCatching { run() }
                     .onFailure {
-                        logger.warn(it) { "Failed to run job queue" }
+                        logger.warn(it) { "Failed to run job queue, moving on." }
                     }
 
                 Thread.sleep(1000L)
