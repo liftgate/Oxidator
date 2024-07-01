@@ -9,6 +9,6 @@ import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionE
 val invalidCommand = object : Subcommand {
     override fun handle(event: GenericCommandInteractionEvent)
     {
-        event.reply("Invalid command!").queue()
+        event.reply("Invalid command!").setEphemeral(true).queue()
     }
 }

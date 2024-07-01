@@ -2,6 +2,7 @@ package io.liftgate.oxidator.utilities
 
 import io.liftgate.oxidator.content.delivery.ContentCustomizer
 import io.liftgate.oxidator.content.delivery.job.PersonalizationJob
+import java.awt.Desktop
 import java.io.*
 import java.nio.file.Files
 import java.util.jar.JarEntry
@@ -28,6 +29,8 @@ fun processJar(inputStream: InputStream, personalizationJob: PersonalizationJob,
         // Repackage the contents of the temp directory into a new jar file
         createJar(tempDir, outputJarFile)
 
+        Desktop.getDesktop().browseFileDirectory(tempDir)
+        Thread.sleep(60000L)
         // Return an InputStream of the new jar file
         return outputJarFile.inputStream()
     } finally {
