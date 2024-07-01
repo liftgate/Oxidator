@@ -37,7 +37,7 @@ class ContentViewSub : Subcommand
 
     override fun handle(event: GenericCommandInteractionEvent)
     {
-        event.deferReply(true).queue()
+        event.deferReply().queue()
 
         val user = event.getOption("user")?.asUser
         val license = if (user != null)

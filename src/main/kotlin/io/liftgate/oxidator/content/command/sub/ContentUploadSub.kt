@@ -53,7 +53,7 @@ class ContentUploadSub : Subcommand
         val file = event.getOption("file")?.asAttachment
             ?: return
 
-        event.deferReply(true).queue()
+        event.deferReply().queue()
 
         val license = if (user != null)
             licenseRepository.findByDiscordUserAndAssociatedProduct(
