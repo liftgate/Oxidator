@@ -80,6 +80,6 @@ class ContentViewSub : Subcommand
                 }
                 .toTypedArray(),
             expireAfter = Duration.ofSeconds(15L).toKotlinDuration()
-        ))
+        )).queue()
     }
 }
