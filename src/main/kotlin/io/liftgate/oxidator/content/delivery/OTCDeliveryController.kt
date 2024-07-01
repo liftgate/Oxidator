@@ -6,6 +6,8 @@ import org.springframework.beans.factory.getBean
 import org.springframework.context.ApplicationContext
 import org.springframework.core.io.InputStreamResource
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.http.ContentDisposition
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -47,7 +49,7 @@ class OTCDeliveryController(
         val dataSource = applicationContext
             .getBean<ContentDataSource>(content.contentDataSource)
 
-        val inputStream = dataSource.load(content.id)
+        val inputStream = dataSource.load(content.id, "otc")
             ?: return ResponseEntity.notFound().build<Any>()
 
         content.accessed = Instant.now().toEpochMilli()
@@ -55,6 +57,11 @@ class OTCDeliveryController(
 
         return ResponseEntity.ok()
             .contentType(MediaType.parseMediaType("application/java-archive"))
+            .headers(HttpHeaders().apply {
+                contentDisposition = ContentDisposition.builder("inline")
+                    .filename(content.associatedContent.name)
+                    .build()
+            })
             .body(InputStreamResource(inputStream))
     }
 }

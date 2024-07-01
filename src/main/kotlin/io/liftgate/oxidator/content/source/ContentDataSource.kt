@@ -10,7 +10,9 @@ import java.io.InputStream
 @Service
 interface ContentDataSource
 {
-    fun load(contentID: Long): InputStream?
-    fun delete(contentID: Long)
-    fun store(contentID: Long, contentType: String, data: InputStream): String
+    fun load(contentID: Long, type: String): InputStream?
+    fun loadAll(type: String): List<Long>
+
+    fun delete(contentID: Long, type: String)
+    fun store(contentID: Long, type: String, contentType: String, data: InputStream): String
 }

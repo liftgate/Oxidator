@@ -61,7 +61,7 @@ class PersonalizationJobService : Runnable, InitializingBean
                 .getBean<ContentDataSource>(currentJob.content.contentDataSourceID)
 
             val contentInputStream = dataSource
-                .load(currentJob.content.id)
+                .load(currentJob.content.id, "content")
                 ?: return run {
                     logger.info { "Failed to find content in data source" }
                     jobs.removeFirst()
@@ -89,6 +89,7 @@ class PersonalizationJobService : Runnable, InitializingBean
             otcRepository.save(oneTimeContent)
             dataSource.store(
                 oneTimeContent.id,
+                "content",
                 "application/java-archive",
                 inputStream
             )

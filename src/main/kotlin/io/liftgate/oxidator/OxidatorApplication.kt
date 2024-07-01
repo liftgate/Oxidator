@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling
 
 @EnableAsync
 @EnableScheduling
-@ComponentScan("io.liftgate.oxidator")
 @SpringBootApplication(exclude = [ErrorMvcAutoConfiguration::class])
 class OxidatorApplication
 
