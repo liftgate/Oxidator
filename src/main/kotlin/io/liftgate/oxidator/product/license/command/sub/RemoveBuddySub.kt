@@ -35,7 +35,7 @@ class RemoveBuddySub : Subcommand
 
         event.deferReply(true).queue()
 
-        val license = licenseRepository.findByDiscordUserAndAssociatedProduct(user.idLong, detail.id)
+        val license = licenseRepository.findByDiscordUserAndAssociatedProduct(event.user.idLong, detail.id)
         if (license == null)
         {
             event.hook.sendMessageEmbeds(Embed {
