@@ -89,7 +89,7 @@ class PersonalizationJobService : Runnable, InitializingBean
             otcRepository.save(oneTimeContent)
             dataSource.store(
                 oneTimeContent.id,
-                "content",
+                "otc",
                 "application/java-archive",
                 inputStream
             )

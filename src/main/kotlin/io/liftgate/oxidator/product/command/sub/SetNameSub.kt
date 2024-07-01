@@ -38,8 +38,6 @@ class SetNameSub : Subcommand
             title = "Set Name"
             description =
                 "The new name for $oldName is: $name."
-        }).queue {
-            catalog.updateCommands()
-        }
+        }).queue()
     }
 }

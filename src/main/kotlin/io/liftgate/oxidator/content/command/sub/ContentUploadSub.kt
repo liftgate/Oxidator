@@ -84,7 +84,7 @@ class ContentUploadSub : Subcommand
         versionedContentRepository.save(newContent)
         cds.store(
             newContent.id,
-            "otc",
+            "content",
             file.contentType ?: "application/java-archive",
             stream
         )

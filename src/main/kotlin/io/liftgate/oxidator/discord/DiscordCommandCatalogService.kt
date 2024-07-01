@@ -1,15 +1,21 @@
 package io.liftgate.oxidator.discord
 
+import dev.minn.jda.ktx.events.listener
 import dev.minn.jda.ktx.interactions.commands.option
 import dev.minn.jda.ktx.interactions.commands.slash
 import dev.minn.jda.ktx.interactions.commands.subcommand
 import dev.minn.jda.ktx.interactions.commands.updateCommands
+import io.liftgate.oxidator.content.VersionedContent
+import io.liftgate.oxidator.content.delivery.ContentScope
 import io.liftgate.oxidator.product.details.ProductDetailsRepository
+import io.liftgate.oxidator.product.details.getProduct
 import io.liftgate.oxidator.utilities.logger
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.User
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
+import net.dv8tion.jda.api.interactions.commands.Command
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import org.springframework.beans.factory.InitializingBean
@@ -33,11 +39,7 @@ class DiscordCommandCatalogService(
             ) {
                 isGuildOnly = true
 
-                option<String>("product", "The product in question.", required = true) {
-                    products.forEach {
-                        addChoice(it.name, it.id.toString())
-                    }
-                }
+                option<String>("product", "The product in question.", required = true, autocomplete = true)
                 option<String>(name = "transaction-id", description = "The transaction ID.", required = true)
             }
 
@@ -50,12 +52,7 @@ class DiscordCommandCatalogService(
                 name = "download",
                 description = "Get a one-time download link for a Liftgate product you have a license to!"
             ) {
-                option<String>("product", "The product in question.", required = true) {
-                    products.forEach {
-                        addChoice(it.name, it.id.toString())
-                    }
-                }
-
+                option<String>("product", "The product in question.", required = true, autocomplete = true)
                 option<String>(
                     name = "version",
                     description = "The version you want to download.",
@@ -82,11 +79,7 @@ class DiscordCommandCatalogService(
                     name = "upload",
                     description = "Upload new content."
                 ) {
-                    option<String>("product", "The product in question.", required = true) {
-                        products.forEach {
-                            addChoice(it.name, it.id.toString())
-                        }
-                    }
+                    option<String>("product", "The product in question.", required = true, autocomplete = true)
 
                     addOption(
                         OptionType.ATTACHMENT,
@@ -119,12 +112,7 @@ class DiscordCommandCatalogService(
                 ) {
                     isGuildOnly = true
 
-                    option<String>("product", "The product in question.", required = true) {
-                        products.forEach {
-                            addChoice(it.name, it.id.toString())
-                        }
-                    }
-
+                    option<String>("product", "The product in question.", required = true, autocomplete = true)
                     option<User>("user", "The user to assign as a buddy", required = true)
                 }
 
@@ -134,12 +122,7 @@ class DiscordCommandCatalogService(
                 ) {
                     isGuildOnly = true
 
-                    option<String>("product", "The product in question.", required = true) {
-                        products.forEach {
-                            addChoice(it.name, it.id.toString())
-                        }
-                    }
-
+                    option<String>("product", "The product in question.", required = true, autocomplete = true)
                     option<User>("user", "The user to remove from buddies list.", required = true)
                 }
             }
@@ -155,11 +138,7 @@ class DiscordCommandCatalogService(
                     name = "setrole",
                     description = "Set the purchaser role for this product."
                 ) {
-                    option<String>("product", "The product in question.", required = true) {
-                        products.forEach {
-                            addChoice(it.name, it.id.toString())
-                        }
-                    }
+                    option<String>("product", "The product in question.", required = true, autocomplete = true)
                     option<Role>("role", "The role to be assigned.", required = true)
                 }
 
@@ -167,11 +146,7 @@ class DiscordCommandCatalogService(
                     name = "setbbbresourceid",
                     description = "Set the BuiltByBit resource ID for this product."
                 ) {
-                    option<String>("product", "The product in question.", required = true) {
-                        products.forEach {
-                            addChoice(it.name, it.id.toString())
-                        }
-                    }
+                    option<String>("product", "The product in question.", required = true, autocomplete = true)
                     option<Int>("resource-id", "The resource ID to be assigned.", required = true)
                 }
 
@@ -179,11 +154,7 @@ class DiscordCommandCatalogService(
                     name = "setname",
                     description = "Set the name for this product."
                 ) {
-                    option<String>("product", "The product in question.", required = true) {
-                        products.forEach {
-                            addChoice(it.name, it.id.toString())
-                        }
-                    }
+                    option<String>("product", "The product in question.", required = true, autocomplete = true)
                     option<String>("name", "The name to be set.", required = true)
                 }
 
@@ -191,11 +162,7 @@ class DiscordCommandCatalogService(
                     name = "setdescription",
                     description = "Set the description for this product."
                 ) {
-                    option<String>("product", "The product in question.", required = true) {
-                        products.forEach {
-                            addChoice(it.name, it.id.toString())
-                        }
-                    }
+                    option<String>("product", "The product in question.", required = true, autocomplete = true)
                     option<String>("name", "The description to be set.", required = true)
                 }
 
@@ -203,11 +170,7 @@ class DiscordCommandCatalogService(
                     name = "setpicture",
                     description = "Set the picture URL for this product."
                 ) {
-                    option<String>("product", "The product in question.", required = true) {
-                        products.forEach {
-                            addChoice(it.name, it.id.toString())
-                        }
-                    }
+                    option<String>("product", "The product in question.", required = true, autocomplete = true)
                     option<String>("url", "The picture URL to be set.", required = true)
                 }
 
@@ -215,11 +178,7 @@ class DiscordCommandCatalogService(
                     name = "add-question",
                     description = "Add a question to the product"
                 ) {
-                    option<String>("product", "The product in question.", required = true) {
-                        products.forEach {
-                            addChoice(it.name, it.id.toString())
-                        }
-                    }
+                    option<String>("product", "The product in question.", required = true, autocomplete = true)
                 }
             }
         }.queue()
@@ -228,5 +187,18 @@ class DiscordCommandCatalogService(
     override fun afterPropertiesSet()
     {
         updateCommands()
+
+        discord.listener<CommandAutoCompleteInteractionEvent> {
+            if (it.focusedOption.name != "product")
+            {
+                return@listener
+            }
+
+            val products = productDetailsRepository.findAll()
+                .map { product -> Command.Choice(product.name, product.id.toString()) }
+                .toList()
+
+            it.replyChoices(products).queue()
+        }
     }
 }
