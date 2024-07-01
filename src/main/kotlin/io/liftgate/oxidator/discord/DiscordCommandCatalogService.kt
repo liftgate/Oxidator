@@ -12,6 +12,7 @@ import io.liftgate.oxidator.product.details.getProduct
 import io.liftgate.oxidator.utilities.logger
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
@@ -128,6 +129,14 @@ class DiscordCommandCatalogService(
             }
 
             slash(
+                name = "catalyst",
+                description = "Send a Catalyst info message!"
+            ) {
+                defaultPermissions = DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)
+                isGuildOnly = true
+            }
+
+            slash(
                 name = "product",
                 description = "View all information on product commands!"
             ) {
@@ -188,6 +197,7 @@ class DiscordCommandCatalogService(
     {
         updateCommands()
 
+        discord.presence.activity = Activity.watching("over products")
         discord.listener<CommandAutoCompleteInteractionEvent> {
             if (it.focusedOption.name != "product")
             {

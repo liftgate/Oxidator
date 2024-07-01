@@ -11,7 +11,7 @@ fun JDA.subscribeToModal(id: String, callback: ModalInteractionEvent.() -> Unit)
         {
             override fun onModalInteraction(event: ModalInteractionEvent)
             {
-                if (event.modalId != id) return
+                if (!event.modalId.startsWith(id)) return
 
                 event.callback()
             }
