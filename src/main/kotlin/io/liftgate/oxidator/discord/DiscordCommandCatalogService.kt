@@ -137,6 +137,20 @@ class DiscordCommandCatalogService(
             }
 
             slash(
+                name = "sales",
+                description = "Send the sales & support ticket message!"
+            ) {
+                defaultPermissions = DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)
+            }
+
+            slash(
+                name = "close",
+                description = "Close an open support ticket!"
+            ) {
+                defaultPermissions = DefaultMemberPermissions.enabledFor(Permission.MESSAGE_MANAGE)
+            }
+
+            slash(
                 name = "product",
                 description = "View all information on product commands!"
             ) {

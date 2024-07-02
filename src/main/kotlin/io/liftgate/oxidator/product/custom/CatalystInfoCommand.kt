@@ -168,6 +168,7 @@ class CatalystInfoCommand : InitializingBean
 
             event.messageChannel.sendMessage(MessageCreate {
                 embeds += Embed {
+                    thumbnail = "https://cdn.discordapp.com/attachments/1256045230885568552/1256062629831770262/catalyst.png?ex=6684acfb&is=66835b7b&hm=2458cac5703ef92e5e9302221f8fcf14d5e3745aa1614177af3b50d30557e057&"
                     color = Colors.Primary
                     title = "Catalyst"
                     description = """
