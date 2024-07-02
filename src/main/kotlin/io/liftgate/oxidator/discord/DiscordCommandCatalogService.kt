@@ -168,6 +168,14 @@ class DiscordCommandCatalogService(
                 }
 
                 subcommand(
+                    name = "setprice",
+                    description = "Set the price for this product."
+                ) {
+                    option<String>("product", "The product in question.", required = true, autocomplete = true)
+                    option<Double>("price", "The price to be set.", required = true)
+                }
+
+                subcommand(
                     name = "setdescription",
                     description = "Set the description for this product."
                 ) {
