@@ -107,7 +107,7 @@ class SupportTicketService(
                         )
                     }
                 }
-            })
+            }).queue()
         }
 
         discord.subscribeToModal("catalyst-create") {
