@@ -124,7 +124,7 @@ class SupportTicketService(
                         )
                     }
                 }
-            }).queue()
+            })
         }
 
         discord.subscribeToModal("catalyst-create") {
@@ -138,12 +138,16 @@ class SupportTicketService(
                 )
                 ?: return@subscribeToModal
 
+            deferReply(true).queue()
+
             createNewBareTicket(user = user, union = guildChannel) {
                 license.hasBeenSetup = true
                 licenseRepository.save(license)
 
                 sendMessageEmbeds(Embed {
+                    color = Colors.Primary
                     title = "Catalyst Setup"
+                    description = ""
                     description += """
                         A support representative will be with you soon.
                     """.trimIndent()
@@ -156,7 +160,13 @@ class SupportTicketService(
 
                         field(name = question.prompt, value = value.asString)
                     }
-                }).queue()
+                }).queue {
+                    hook.sendMessageEmbeds(Embed {
+                        color = Colors.Success
+                        title = "Ticket Created"
+                        description = "View your new ticket at: $asMention"
+                    }).queue()
+                }
             }
         }
     }
