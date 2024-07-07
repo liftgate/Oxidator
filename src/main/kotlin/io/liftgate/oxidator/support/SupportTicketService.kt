@@ -56,7 +56,7 @@ class SupportTicketService(
                     color = Colors.Primary
                     description = "A support representative will be with you soon."
                 }).queue {
-                    sendMessage("<@$roleID>").queue()
+                    sendMessage("<@&$roleID>").queue()
                 }
             }
         }
@@ -124,7 +124,7 @@ class SupportTicketService(
                         )
                     }
                 }
-            })
+            }).queue()
         }
 
         discord.subscribeToModal("catalyst-create") {
