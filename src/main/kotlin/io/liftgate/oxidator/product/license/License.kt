@@ -22,6 +22,7 @@ data class License(
     val buddies: MutableSet<Long> = mutableSetOf(),
     val platform: PaymentPlatformType,
     val expiration: Long? = null,
+    var hasBeenSetup: Boolean = false,
     val licenseKey: String = RandomStringUtils.random(
         40, 0, 0,
         true, true,
