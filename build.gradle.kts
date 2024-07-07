@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 plugins {
     id("org.springframework.boot") version "3.3.1"
     id("io.spring.dependency-management") version "1.1.5"
@@ -25,6 +27,16 @@ configurations {
 repositories {
     mavenCentral()
     maven(url = "https://jitpack.io")
+}
+
+tasks {
+    getByName<BootJar>("bootJar") {
+        archiveFileName.set("Catalyst.jar")
+    }
+
+    withType<Test> {
+        useJUnitPlatform()
+    }
 }
 
 dependencies {
@@ -60,8 +72,4 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict")
     }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }

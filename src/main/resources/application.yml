@@ -14,6 +14,7 @@ server:
     whitelabel:
       enabled: false
 oxidator:
+  support-roleID: "1257529786125783040"
   baseURL: "http://localhost:8080"
   builtbybit:
     secret: "CHANGE ME"

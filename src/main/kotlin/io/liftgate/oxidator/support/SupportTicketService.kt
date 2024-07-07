@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent
 import org.springframework.beans.factory.InitializingBean
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 /**
@@ -29,6 +30,8 @@ class SupportTicketService(
     private val discord: JDA
 ) : InitializingBean
 {
+    @Value("\${oxidator.support-roleID}") lateinit var roleID: String
+
     override fun afterPropertiesSet()
     {
         discord.listener<ChannelDeleteEvent> {
@@ -50,7 +53,9 @@ class SupportTicketService(
                     title = "Welcome"
                     color = Colors.Primary
                     description = "A support representative will be with you soon."
-                }).queue()
+                }).queue {
+                    sendMessage("<@$roleID>").queue()
+                }
             }
         }
 
