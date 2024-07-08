@@ -31,7 +31,7 @@ repositories {
 
 tasks {
     getByName<BootJar>("bootJar") {
-        archiveFileName.set("Catalyst.jar")
+        archiveFileName.set("Oxidator.jar")
     }
 
     withType<Test> {
