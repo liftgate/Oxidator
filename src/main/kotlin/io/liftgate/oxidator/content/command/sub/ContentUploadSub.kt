@@ -43,6 +43,7 @@ class ContentUploadSub : Subcommand
             ?: return
 
         val user = event.getOption("user")?.asUser
+        val multiDownload = event.getOption("multi-download")?.asBoolean ?: false
         val version = event.getOption("version")?.asString
             ?: return
         val dataSource = event.getOption("datasource")?.asString
@@ -88,7 +89,8 @@ class ContentUploadSub : Subcommand
             version = version,
             contentDataSourceID = dataSource,
             contentScope = if (user != null) ContentScope.LicenseSpecific else ContentScope.Global,
-            associatedLicense = license
+            associatedLicense = license,
+            multiDownloadAllowed = multiDownload
         )
 
         versionedContentRepository.save(newContent)
