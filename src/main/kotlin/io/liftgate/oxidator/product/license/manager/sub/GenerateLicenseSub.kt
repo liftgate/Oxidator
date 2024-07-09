@@ -50,7 +50,7 @@ class GenerateLicenseSub : Subcommand
         ))
 
         event.hook.sendMessageEmbeds(Embed {
-            color = Colors.Failure
+            color = Colors.Success
             title = "License Generated"
             description =
                 "A new ${product.name} license for user ${user.asMention} has been generated."
