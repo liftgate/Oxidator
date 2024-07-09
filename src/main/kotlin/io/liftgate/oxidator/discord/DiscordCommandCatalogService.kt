@@ -91,7 +91,7 @@ class DiscordCommandCatalogService(
 
                     option<String>("version", "The content's version.", required = true)
 
-                    option<Boolean>("multi-download", "Are multiple downloads of this allowed?.")
+                    option<Boolean>("multi-download", "Are multiple downloads of this allowed?")
                     option<User>("user", "The user which holds access to this content.")
                     option<String>("datasource", "The storage system in which the content will be held.") {
                         addChoice("GridFs", "gridfs")

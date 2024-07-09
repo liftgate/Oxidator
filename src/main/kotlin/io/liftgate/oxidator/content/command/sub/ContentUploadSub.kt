@@ -72,7 +72,7 @@ class ContentUploadSub : Subcommand
             return
         }
 
-        if (file.fileExtension != "jar" || file.fileExtension != "zip")
+        if (file.fileExtension !in listOf("zip", "jar"))
         {
             event.hook.sendMessageEmbeds(Embed {
                 color = Colors.Failure
