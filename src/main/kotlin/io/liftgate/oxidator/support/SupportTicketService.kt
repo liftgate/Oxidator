@@ -19,6 +19,8 @@ import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteract
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import java.security.SecureRandom
+import kotlin.random.Random
 
 /**
  * @author GrowlyX
@@ -171,6 +173,9 @@ class SupportTicketService(
         }
     }
 
+    private val random = SecureRandom()
+
+    fun SecureRandom.randomHexString() = nextInt(0x1000000).toString().format("%06x")
     fun createNewBareTicket(user: User, union: GuildMessageChannelUnion, postConstruct: TextChannel.() -> Unit)
     {
         val existingTickets = supportTicketRepository.findAllByOwnerID(user.idLong)
@@ -186,7 +191,7 @@ class SupportTicketService(
 
         val supportTicketID = snowflake()
         parentCategory
-            .createTextChannel("ticket-$supportTicketID")
+            .createTextChannel("ticket-${random.randomHexString()}")
             .addMemberPermissionOverride(
                 user.idLong,
                 listOf(Permission.VIEW_CHANNEL),
@@ -227,7 +232,7 @@ class SupportTicketService(
 
         val supportTicketID = snowflake()
         parentCategory
-            .createTextChannel("ticket-$supportTicketID")
+            .createTextChannel("ticket-${random.randomHexString()}")
             .addMemberPermissionOverride(
                 user.idLong,
                 listOf(Permission.VIEW_CHANNEL),
