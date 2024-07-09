@@ -148,7 +148,16 @@ class DiscordCommandCatalogService(
                 ) {
                     isGuildOnly = true
                     option<String>("product", "The product in question.", required = true, autocomplete = true)
-                    option<User>("user", "The user to view licenses of.", required = true)
+                    option<User>("user", "The user to generate a license for.", required = true)
+                }
+
+                subcommand(
+                    name = "invalidate",
+                    description = "Invalidate a product license held by a user."
+                ) {
+                    isGuildOnly = true
+                    option<String>("product", "The product in question.", required = true, autocomplete = true)
+                    option<User>("user", "The user to invalidate the license for.", required = true)
                 }
 
                 subcommand(
