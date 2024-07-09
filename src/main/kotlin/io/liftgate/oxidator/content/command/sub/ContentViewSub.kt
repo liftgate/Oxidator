@@ -61,6 +61,16 @@ class ContentViewSub : Subcommand
                 .findAll()
                 .chunked(5)
 
+        if (allContent.isEmpty())
+        {
+            event.hook.sendMessageEmbeds(Embed {
+                color = Colors.Failure
+                title = "No Content"
+                description = "There is no content in the system!"
+            }).queue()
+            return
+        }
+
         event.hook.sendPaginator(paginator(
             pages = allContent
                 .mapIndexed { index, content ->
