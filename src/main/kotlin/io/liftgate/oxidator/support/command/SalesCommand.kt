@@ -3,7 +3,6 @@ package io.liftgate.oxidator.support.command
 import dev.minn.jda.ktx.events.onCommand
 import dev.minn.jda.ktx.interactions.components.button
 import dev.minn.jda.ktx.messages.MessageCreate
-import io.liftgate.oxidator.utilities.Colors
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.emoji.Emoji

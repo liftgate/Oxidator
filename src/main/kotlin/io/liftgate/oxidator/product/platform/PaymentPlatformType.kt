@@ -6,5 +6,5 @@ package io.liftgate.oxidator.product.platform
  */
 enum class PaymentPlatformType
 {
-    BuiltByBit, Tebex
+    BuiltByBit, Tebex, Manual
 }

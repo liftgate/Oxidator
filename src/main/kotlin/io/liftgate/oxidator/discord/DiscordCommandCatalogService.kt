@@ -9,6 +9,7 @@ import io.liftgate.oxidator.content.VersionedContent
 import io.liftgate.oxidator.content.delivery.ContentScope
 import io.liftgate.oxidator.product.details.ProductDetailsRepository
 import io.liftgate.oxidator.product.details.getProduct
+import io.liftgate.oxidator.utilities.INFO_COLOUR
 import io.liftgate.oxidator.utilities.logger
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.Permission
@@ -30,9 +31,6 @@ class DiscordCommandCatalogService(
 {
     fun updateCommands()
     {
-        val products = productDetailsRepository.findAll()
-        logger.info { "Attempting to update commands..." }
-
         discord.updateCommands {
             slash(
                 name = "claim",
@@ -138,6 +136,31 @@ class DiscordCommandCatalogService(
             }
 
             slash(
+                name = "licensemanager",
+                description = "View license manager commands."
+            ) {
+                defaultPermissions = DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)
+                isGuildOnly = true
+
+                subcommand(
+                    name = "generate",
+                    description = "Generate a new product license for a user."
+                ) {
+                    isGuildOnly = true
+                    option<String>("product", "The product in question.", required = true, autocomplete = true)
+                    option<User>("user", "The user to view licenses of.", required = true)
+                }
+
+                subcommand(
+                    name = "view",
+                    description = "View all licenses of a user."
+                ) {
+                    isGuildOnly = true
+                    option<User>("user", "The user to view licenses of.", required = true)
+                }
+            }
+
+            slash(
                 name = "sales",
                 description = "Send the sales & support ticket message!"
             ) {
@@ -213,7 +236,9 @@ class DiscordCommandCatalogService(
                     option<String>("product", "The product in question.", required = true, autocomplete = true)
                 }
             }
-        }.queue()
+        }.queue {
+            logger.info { "${INFO_COLOUR}Updated all commands!" }
+        }
     }
 
     override fun afterPropertiesSet()
