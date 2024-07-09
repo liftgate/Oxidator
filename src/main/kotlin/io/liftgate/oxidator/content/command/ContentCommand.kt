@@ -2,6 +2,7 @@ package io.liftgate.oxidator.content.command
 
 import dev.minn.jda.ktx.events.onCommand
 import io.liftgate.oxidator.command.invalidCommand
+import io.liftgate.oxidator.content.command.sub.ContentReplaceSub
 import io.liftgate.oxidator.content.command.sub.ContentUploadSub
 import io.liftgate.oxidator.content.command.sub.ContentViewSub
 import net.dv8tion.jda.api.JDA
@@ -22,6 +23,7 @@ class ContentCommand : InitializingBean
 
     @Autowired lateinit var contentViewSub: ContentViewSub
     @Autowired lateinit var contentUploadSub: ContentUploadSub
+    @Autowired lateinit var contentReplaceSub: ContentReplaceSub
 
     override fun afterPropertiesSet()
     {
@@ -36,6 +38,7 @@ class ContentCommand : InitializingBean
             {
                 "view" -> contentViewSub
                 "upload" -> contentUploadSub
+                "replace" -> contentReplaceSub
                 else -> invalidCommand
             }.handle(event)
         }

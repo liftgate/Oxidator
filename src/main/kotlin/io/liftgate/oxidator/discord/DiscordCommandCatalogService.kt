@@ -95,6 +95,23 @@ class DiscordCommandCatalogService(
                         addChoice("GridFs", "gridfs")
                     }
                 }
+
+                subcommand(
+                    name = "replace",
+                    description = "Replace existing content."
+                ) {
+                    option<String>("product", "The product in question.", required = true, autocomplete = true)
+
+                    addOption(
+                        OptionType.ATTACHMENT,
+                        "file",
+                        "The new content file.",
+                        true
+                    )
+
+                    option<String>("version", "The content's version.", required = true)
+                    option<User>("user", "The user which holds access to this content.")
+                }
             }
 
             slash(
