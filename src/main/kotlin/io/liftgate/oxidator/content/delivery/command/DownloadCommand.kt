@@ -90,15 +90,18 @@ class DownloadCommand : InitializingBean
                 return@onCommand
             }
 
-            val existing = otcRepository.findAllByAssociatedLicenseAndAssociatedContent(license, versionedContent)
-            if (existing.isNotEmpty())
+            if (!versionedContent.multiDownloadAllowed)
             {
-                event.hook.sendMessageEmbeds(Embed {
-                    color = Colors.Failure
-                    title = "Already Downloaded"
-                    description = "${product.name} (`$version`) has already been downloaded by you!"
-                }).queue()
-                return@onCommand
+                val existing = otcRepository.findAllByAssociatedLicenseAndAssociatedContent(license, versionedContent)
+                if (existing.isNotEmpty())
+                {
+                    event.hook.sendMessageEmbeds(Embed {
+                        color = Colors.Failure
+                        title = "Already Downloaded"
+                        description = "${product.name} (`$version`) has already been downloaded by you!"
+                    }).queue()
+                    return@onCommand
+                }
             }
 
             if (personalizationJobService.hasExisting(license, versionedContent))

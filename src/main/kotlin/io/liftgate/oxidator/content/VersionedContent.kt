@@ -19,6 +19,7 @@ data class VersionedContent(
     @DBRef val product: ProductDetails,
     val version: String,
     val contentDataSourceID: String,
+    val multiDownloadAllowed: Boolean = false,
     val contentScope: ContentScope = ContentScope.Global,
     @DBRef val associatedLicense: License? = null
 )

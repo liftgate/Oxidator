@@ -71,6 +71,16 @@ class ContentUploadSub : Subcommand
             return
         }
 
+        if (file.fileExtension != ".jar" || file.fileExtension != ".zip")
+        {
+            event.hook.sendMessageEmbeds(Embed {
+                color = Colors.Failure
+                title = "Invalid Content Type"
+                description = "CDS only supports `.zip` and `.jar` files as content upload inputs."
+            }).queue()
+            return
+        }
+
         val stream = URL(file.url).openStream()
         val newContent = VersionedContent(
             name = file.fileName,
