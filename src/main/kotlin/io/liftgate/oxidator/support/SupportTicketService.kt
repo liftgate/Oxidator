@@ -163,6 +163,7 @@ class SupportTicketService(
                         field(name = question.prompt, value = value.asString)
                     }
                 }).queue {
+                    sendMessage("<@&$roleID>").queue()
                     hook.sendMessageEmbeds(Embed {
                         color = Colors.Success
                         title = "Ticket Created"
@@ -191,7 +192,7 @@ class SupportTicketService(
 
         val supportTicketID = snowflake()
         parentCategory
-            .createTextChannel("ticket-${random.randomHexString()}")
+            .createTextChannel("setup-${random.randomHexString()}")
             .addMemberPermissionOverride(
                 user.idLong,
                 listOf(Permission.VIEW_CHANNEL),
