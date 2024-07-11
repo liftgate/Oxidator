@@ -3,6 +3,7 @@ package io.liftgate.oxidator.product.license.command
 import dev.minn.jda.ktx.events.onCommand
 import io.liftgate.oxidator.command.invalidCommand
 import io.liftgate.oxidator.product.license.command.sub.AddBuddySub
+import io.liftgate.oxidator.product.license.command.sub.LicenseKeySub
 import io.liftgate.oxidator.product.license.command.sub.LicenseViewSub
 import io.liftgate.oxidator.product.license.command.sub.RemoveBuddySub
 import net.dv8tion.jda.api.JDA
@@ -21,6 +22,7 @@ class LicenseCommand : InitializingBean
     lateinit var jda: JDA
 
     @Autowired lateinit var licenseViewSub: LicenseViewSub
+    @Autowired lateinit var licenseKeySub: LicenseKeySub
     @Autowired lateinit var addBuddySub: AddBuddySub
     @Autowired lateinit var removeBuddySub: RemoveBuddySub
 
@@ -30,6 +32,7 @@ class LicenseCommand : InitializingBean
             when (event.subcommandName)
             {
                 "view" -> licenseViewSub
+                "key" -> licenseKeySub
                 "addbuddy" -> addBuddySub
                 "removebuddy" -> removeBuddySub
                 else -> invalidCommand

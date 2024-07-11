@@ -7,6 +7,7 @@ import io.liftgate.oxidator.product.details.getProduct
 import io.liftgate.oxidator.product.license.LicenseRepository
 import io.liftgate.oxidator.utilities.Colors
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent
+import net.dv8tion.jda.api.utils.FileUpload
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import kotlin.jvm.optionals.getOrNull
@@ -42,15 +43,13 @@ class LicenseKeySub : Subcommand
             return
         }
 
-        event.hook.sendMessage(
-            """
-                Your license key for ${product.name}:
-                ```
-                ${license.licenseKey}
-                ```
-                
-                **DO NOT SHARE THIS!**
-            """.trimIndent()
-        ).queue()
+        event.hook
+            .sendFiles(
+                FileUpload.fromData(
+                    license.licenseKey.encodeToByteArray(),
+                    "license.liftgate"
+                )
+            )
+            .queue()
     }
 }
