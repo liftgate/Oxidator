@@ -3,4 +3,6 @@ package io.liftgate.oxidator.validation;
 public class OxidatorValidationParameters
 {
     public static final String HASH = "{{ hash }}";
+    public static final String SECONDARY = "{{ secondary }}";
+    public static final String PRIMARY = "{{ primary }}";
 }

@@ -1,6 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import java.net.URI
-import java.net.URL
 
 plugins {
     `maven-publish`
@@ -18,6 +17,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
 }
 
+val primary = "https://cds.liftgate.io/crypt/production/pubkey"
+val secondary = "https://gist.githubusercontent.com/GrowlyX/11b56e42ae82053907c1bfbffb8965fa/raw/088ae86111c397c66c722a6ce0491e90a9374d77/public_key.liftgate.pem"
+
 sourceSets {
     main {
         blossom {
@@ -31,6 +33,8 @@ sourceSets {
                 }
 
                 property("hash", hash)
+                property("secondary", secondary)
+                property("primary", primary)
             }
         }
     }

@@ -23,10 +23,13 @@ subprojects {
         }
     }
 
+    dependencies {
+        implementation("commons-codec:commons-codec:1.17.0")
+    }
+
     kotlin {
         compilerOptions {
             freeCompilerArgs.addAll("-Xjsr305=strict")
         }
     }
-
 }

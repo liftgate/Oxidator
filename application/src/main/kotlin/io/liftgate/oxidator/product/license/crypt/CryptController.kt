@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 class CryptController(private val keyGenerator: KeyGenerator)
 {
     private var hash: String? = null
+    private var pubKeyContent: String? = null
 
     @GetMapping("/developers/hash")
     fun developmentHash(): String
@@ -28,5 +29,17 @@ class CryptController(private val keyGenerator: KeyGenerator)
         )
         this.hash = digest
         return hash!!
+    }
+
+    @GetMapping("/production/pubkey")
+    fun pubKey(): String
+    {
+        if (pubKeyContent != null)
+        {
+            return pubKeyContent!!
+        }
+
+        this.pubKeyContent = KeyGenerator.PUBLIC_KEY_PATH.readText()
+        return pubKeyContent!!
     }
 }
