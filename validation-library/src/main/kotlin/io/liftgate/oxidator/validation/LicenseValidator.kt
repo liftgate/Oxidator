@@ -1,6 +1,5 @@
-package io.liftgate.oxidator.product.license.crypt.offline
+package io.liftgate.oxidator.validation
 
-import io.liftgate.oxidator.product.license.crypt.LicenseCrypt
 import kotlinx.serialization.json.Json
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi

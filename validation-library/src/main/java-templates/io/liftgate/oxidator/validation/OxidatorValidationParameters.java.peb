@@ -1,0 +1,6 @@
+package io.liftgate.oxidator.validation;
+
+public class OxidatorValidationParameters
+{
+    public static final String HASH = "{{ hash }}";
+}

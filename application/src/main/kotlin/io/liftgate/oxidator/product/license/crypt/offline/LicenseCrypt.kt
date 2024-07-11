@@ -1,4 +1,4 @@
-package io.liftgate.oxidator.product.license.crypt
+package io.liftgate.oxidator.product.license.crypt.offline
 
 import kotlinx.serialization.Serializable
 

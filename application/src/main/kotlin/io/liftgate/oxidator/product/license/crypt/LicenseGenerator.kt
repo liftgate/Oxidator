@@ -1,5 +1,6 @@
 package io.liftgate.oxidator.product.license.crypt
 
+import io.liftgate.oxidator.product.license.crypt.offline.LicenseCrypt
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.springframework.stereotype.Service
