@@ -4,6 +4,8 @@ import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 /**
  * @author GrowlyX
@@ -31,6 +33,7 @@ class CryptController(private val keyGenerator: KeyGenerator)
         return hash!!
     }
 
+    @OptIn(ExperimentalEncodingApi::class)
     @GetMapping("/production/pubkey")
     fun pubKey(): String
     {
@@ -39,7 +42,7 @@ class CryptController(private val keyGenerator: KeyGenerator)
             return pubKeyContent!!
         }
 
-        this.pubKeyContent = KeyGenerator.PUBLIC_KEY_PATH.readText()
+        this.pubKeyContent = Base64.encode(keyGenerator.publicKey.encoded)
         return pubKeyContent!!
     }
 }

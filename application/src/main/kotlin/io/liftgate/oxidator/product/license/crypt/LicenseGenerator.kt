@@ -24,7 +24,7 @@ class LicenseGenerator(private val keyGenerator: KeyGenerator)
         return Base64.encode(
             Json
                 .encodeToString(
-                    LicenseCrypt(String(signedData), encodedSignature)
+                    LicenseCrypt(licenseData, encodedSignature)
                 )
                 .toByteArray()
         )

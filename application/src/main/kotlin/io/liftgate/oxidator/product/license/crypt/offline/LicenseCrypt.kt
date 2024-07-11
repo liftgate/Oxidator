@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
  * @since 7/10/2024
  */
 @Serializable
-data class LicenseCrypt(
+class LicenseCrypt(
     val data: String,
     val signature: String
 )

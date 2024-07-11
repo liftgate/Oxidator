@@ -7,6 +7,8 @@ import java.net.URI
 import java.security.KeyFactory
 import java.security.PublicKey
 import java.security.spec.X509EncodedKeySpec
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 /**
  * @author GrowlyX
@@ -15,8 +17,9 @@ import java.security.spec.X509EncodedKeySpec
 object EmbeddedPubKeyIntegrityCheckMethod : LicenseValidationMethod
 {
     var publicKey: PublicKey? = null
-
     override fun requiresMore() = true
+
+    @OptIn(ExperimentalEncodingApi::class)
     override fun tryValidate(licenseContent: String): Boolean
     {
         val resource = EmbeddedPubKeyIntegrityCheckMethod::class.java.classLoader
@@ -29,13 +32,12 @@ object EmbeddedPubKeyIntegrityCheckMethod : LicenseValidationMethod
             }.getOrNull()
             ?: return false
 
-        val allBytes = resource.readAllBytes()
-        val keySpec = X509EncodedKeySpec(resource.readAllBytes())
+        val bytes = resource.readAllBytes()
+        val allBytes = Base64.decode(bytes)
+        val keySpec = X509EncodedKeySpec(allBytes)
         val keyFactory = KeyFactory.getInstance("RSA")
 
         this.publicKey = keyFactory.generatePublic(keySpec)
-        val digest = DigestUtils.sha256Hex(allBytes) == OxidatorValidationParameters.HASH
-
-        return digest
+        return DigestUtils.sha256Hex(bytes) == OxidatorValidationParameters.HASH
     }
 }

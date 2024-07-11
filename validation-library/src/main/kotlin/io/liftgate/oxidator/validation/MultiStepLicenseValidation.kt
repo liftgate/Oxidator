@@ -27,6 +27,7 @@ object MultiStepLicenseValidation : LicenseValidationMethod
                 {
                     continue
                 }
+
                 return true
             }
 
@@ -35,5 +36,4 @@ object MultiStepLicenseValidation : LicenseValidationMethod
 
         return false
     }
-
 }
