@@ -8,13 +8,13 @@ import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Service
-class LicenseGenerator(private val privateKey: PrivateKey)
+class LicenseGenerator(private val keyGenerator: KeyGenerator)
 {
     @OptIn(ExperimentalEncodingApi::class)
     fun generateLicense(licenseData: String): String
     {
         val signature = Signature.getInstance("SHA256withRSA")
-        signature.initSign(privateKey)
+        signature.initSign(keyGenerator.privateKey)
         signature.update(licenseData.toByteArray())
 
         val signedData = signature.sign()

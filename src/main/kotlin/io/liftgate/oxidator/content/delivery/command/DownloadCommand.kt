@@ -9,6 +9,7 @@ import io.liftgate.oxidator.content.VersionedContentRepository
 import io.liftgate.oxidator.content.delivery.ContentCustomizer
 import io.liftgate.oxidator.content.delivery.ContentScope
 import io.liftgate.oxidator.content.delivery.OTCRepository
+import io.liftgate.oxidator.content.delivery.customizers.PubKeyContentCustomizer
 import io.liftgate.oxidator.content.delivery.job.PersonalizationJob
 import io.liftgate.oxidator.content.delivery.job.PersonalizationJobService
 import io.liftgate.oxidator.product.details.ProductDetailsRepository
@@ -47,6 +48,9 @@ class DownloadCommand : InitializingBean
 
     @Autowired
     lateinit var personalizationJobService: PersonalizationJobService
+
+    @Autowired
+    lateinit var pubKeyContentCustomizer: PubKeyContentCustomizer
 
     override fun afterPropertiesSet()
     {
@@ -118,13 +122,7 @@ class DownloadCommand : InitializingBean
                 license = license,
                 content = versionedContent,
                 user = event.user,
-                customizer = object : ContentCustomizer
-                {
-                    override fun customize(job: PersonalizationJob, directory: File)
-                    {
-
-                    }
-                }
+                customizer = pubKeyContentCustomizer
             ))
 
             event.hook.sendMessageEmbeds(Embed {

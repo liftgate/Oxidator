@@ -1,11 +1,10 @@
-package io.liftgate.oxidator.product.license.crypt
+package io.liftgate.oxidator.product.license.crypt.offline
 
+import io.liftgate.oxidator.product.license.crypt.LicenseCrypt
 import kotlinx.serialization.json.Json
-import org.springframework.stereotype.Service
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-@Service
 class LicenseValidator(private val verifier: LicenseVerifier)
 {
     @OptIn(ExperimentalEncodingApi::class)

@@ -39,5 +39,10 @@ out/
 ### Kotlin ###
 .kotlin
 
+### Spring ###
 config/
 backend/config/
+
+### Oxidator ###
+private_key.pem
+public_key.pem
