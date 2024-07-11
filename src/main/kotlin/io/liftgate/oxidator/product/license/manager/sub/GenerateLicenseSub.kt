@@ -6,6 +6,7 @@ import io.liftgate.oxidator.product.details.ProductDetailsRepository
 import io.liftgate.oxidator.product.details.getProduct
 import io.liftgate.oxidator.product.license.License
 import io.liftgate.oxidator.product.license.LicenseRepository
+import io.liftgate.oxidator.product.license.crypt.LicenseGenerator
 import io.liftgate.oxidator.product.platform.PaymentPlatformType
 import io.liftgate.oxidator.utilities.Colors
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent
@@ -21,6 +22,9 @@ class GenerateLicenseSub : Subcommand
 {
     @Autowired
     lateinit var licenseRepository: LicenseRepository
+
+    @Autowired
+    lateinit var licenseGenerator: LicenseGenerator
 
     @Autowired
     lateinit var productDetailsRepository: ProductDetailsRepository
@@ -46,6 +50,9 @@ class GenerateLicenseSub : Subcommand
             discordUser = user.idLong,
             associatedProduct = product.id,
             associatedTxnID = "",
+            licenseKey = licenseGenerator.generateLicense(
+                "${event.user.idLong}:Manual:${product.id}:NULL:${System.currentTimeMillis()}"
+            ),
             platform = PaymentPlatformType.Manual
         ))
 

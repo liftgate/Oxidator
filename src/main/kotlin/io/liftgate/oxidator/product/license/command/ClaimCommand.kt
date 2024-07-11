@@ -5,6 +5,7 @@ import dev.minn.jda.ktx.messages.Embed
 import io.liftgate.oxidator.product.details.ProductDetailsRepository
 import io.liftgate.oxidator.product.license.License
 import io.liftgate.oxidator.product.license.LicenseRepository
+import io.liftgate.oxidator.product.license.crypt.LicenseGenerator
 import io.liftgate.oxidator.product.platform.PaymentPlatform
 import io.liftgate.oxidator.product.platform.PaymentPlatformType
 import io.liftgate.oxidator.product.platform.builtbybit.BuiltByBitPaymentPlatform
@@ -23,7 +24,9 @@ class ClaimCommand : InitializingBean
     @Autowired lateinit var tebexPaymentPlatform: TebexPaymentPlatform
     @Autowired lateinit var builtByBitPaymentPlatform: BuiltByBitPaymentPlatform
     @Autowired lateinit var productDetailsRepository: ProductDetailsRepository
+
     @Autowired lateinit var licenseRepository: LicenseRepository
+    @Autowired lateinit var licenseGenerator: LicenseGenerator
 
     override fun afterPropertiesSet()
     {
@@ -61,6 +64,9 @@ class ClaimCommand : InitializingBean
                         discordUser = event.user.idLong,
                         platform = platformType,
                         associatedProduct = detail.id,
+                        licenseKey = licenseGenerator.generateLicense(
+                            "${event.user.idLong}:$platformType:${detail.id}:$transactionID:${System.currentTimeMillis()}"
+                        ),
                         associatedTxnID = transactionID
                     ))
 

@@ -12,22 +12,15 @@ import java.security.SecureRandom
  * @author GrowlyX
  * @since 6/28/2024
  */
-val random = SecureRandom()
-
 @Document(collection = "licenses")
 data class License(
     @Id val id: Long = snowflake(),
     @Indexed val discordUser: Long,
     @Indexed val associatedProduct: Long,
+    val licenseKey: String,
     val buddies: MutableSet<Long> = mutableSetOf(),
     val platform: PaymentPlatformType,
     val expiration: Long? = null,
     var hasBeenSetup: Boolean = false,
-    val licenseKey: String = RandomStringUtils.random(
-        40, 0, 0,
-        true, true,
-        null,
-        random
-    ),
     @Indexed val associatedTxnID: String
 )
