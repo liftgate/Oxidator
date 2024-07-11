@@ -43,7 +43,7 @@ class LicenseViewSub : Subcommand
                         .getOrNull()
                         ?: continue
 
-                    description += "\n- ${detail.name}: ||`${license.licenseKey}`||"
+                    description += "\n- ${detail.name}: Use `/license key ${detail.name}` to get your license key!"
                     description += "\n  - Buddies: ${if (license.buddies.isEmpty()) "**None**" else license.buddies.joinToString(", ") { "<@$it>" }}"
                 }
             }).queue()

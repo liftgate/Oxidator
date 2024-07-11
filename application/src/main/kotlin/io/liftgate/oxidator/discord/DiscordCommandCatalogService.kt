@@ -124,6 +124,13 @@ class DiscordCommandCatalogService(
                 )
 
                 subcommand(
+                    name = "key",
+                    description = "Get a license key for a product."
+                ) {
+                    option<String>("product", "The product in question.", required = true, autocomplete = true)
+                }
+
+                subcommand(
                     name = "addbuddy",
                     description = "Add a buddy to a product license."
                 ) {
