@@ -8,7 +8,7 @@ import java.io.File
  */
 object LiftgateLicenseMSLicenseValidation
 {
-    fun validate(): Boolean
+    fun validate(product: String): Boolean
     {
         val extractedLicenseKey = File("license.liftgate")
         if (!extractedLicenseKey.exists())
@@ -18,6 +18,7 @@ object LiftgateLicenseMSLicenseValidation
         }
 
         val content = extractedLicenseKey.readText()
+        Environment.productName = product
 
         return runCatching { MultiStepLicenseValidation.tryValidate(content) }
             .onFailure {
