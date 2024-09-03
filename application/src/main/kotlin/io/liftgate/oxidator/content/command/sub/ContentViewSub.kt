@@ -27,9 +27,6 @@ class ContentViewSub : Subcommand
     lateinit var licenseRepository: LicenseRepository
 
     @Autowired
-    lateinit var applicationContext: ApplicationContext
-
-    @Autowired
     lateinit var productDetailsRepository: ProductDetailsRepository
 
     @Autowired

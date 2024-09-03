@@ -112,6 +112,15 @@ class DiscordCommandCatalogService(
                     option<String>("version", "The content's version.", required = true)
                     option<User>("user", "The user which holds access to this content.")
                 }
+
+                subcommand(
+                    name = "delete",
+                    description = "Delete existing content."
+                ) {
+                    option<String>("product", "The product in question.", required = true, autocomplete = true)
+                    option<String>("version", "The content's version.", required = true)
+                    option<User>("user", "The user which holds access to this content.", required = false)
+                }
             }
 
             slash(
