@@ -71,7 +71,7 @@ class DiscordCommandCatalogService(
                     name = "view",
                     description = "View all of content in the system."
                 ) {
-                    option<User>("user", "A specific user to find content for.")
+                    option<User>("user", "A specific user to find content for.", required = false)
                 }
 
                 subcommand(
